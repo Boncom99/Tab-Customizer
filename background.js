@@ -6,24 +6,70 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       args: [message.newTitle, message.newIcon]
     });
   }
-});
-// Load stored name and URL on extension start
-chrome.storage.local.get(['selectedName', 'selectedURL'], function(data) {
-  if (data.selectedName && data.selectedURL) {
-    setTabProperties(data.selectedName, data.selectedURL);
+  else if(message.type === 'saveNewIcon'){
+    chrome.scripting.executeScript({
+      target: {tabId: message.tabId},
+      function: saveNewIcon,
+      args: [message.newIconName]
+    });
   }
 });
+
+chrome.tabs.onUpdated.addListener((tabId ,changeInfo,_tab) => {
+  const numberTabId=parseInt(tabId)
+   if (changeInfo.status === 'complete') {
+    chrome.storage.local.get([`${tabId}`], function(response) {
+      const data=response[tabId]
+      if (data.name || data.icon) {
+        // setTabProperties(data.name, data.icon);
+        chrome.scripting.executeScript({
+          target: {tabId: tabId},
+          function: setTabProperties,
+          args: [data.name, data.icon]
+        });
+      }
+    });
+   }
+});
+
 function setTabProperties(newTitle, newIcon) {
+  if(newTitle){
   document.title = newTitle;
-  const links = document.getElementsByTagName('link');
+  }
+  if(!newIcon){
+    return
+  }
+  const head = document.getElementsByTagName('head')[0]; // Get the head element
+  const links = head.getElementsByTagName('link');
   for (let i = 0; i < links.length; i++) {
     if(links[i].getAttribute('rel').includes('icon')){
-      if(newIcon){
           links[i].setAttribute('href', newIcon);
-      }
-      else{
-      links[i].setAttribute('href', 'https://cdn.sstatic.net/Sites/stackoverflow/Img/favicon.ico?v=ec617d715196');
-      }
     }
   }
+}
+
+function saveNewIcon(newIconName){
+  const head = document.getElementsByTagName('head')[0]; // Get the head element
+  const links = head.getElementsByTagName('link');
+  let iconHref;
+  for (let i = 0; i < links.length; i++) {
+    if(links[i].getAttribute('rel').includes('icon') && links[i].getAttribute('sizes') === "16x16"){
+        iconHref=links[i].href
+        break;
+    }
+  }
+  // if(iconHref){
+     chrome.storage.local.get(['icons'], function(result) {
+      const icons=result.icons
+      const newArray=[...icons, {text:newIconName, value:iconHref}]
+       chrome.storage.local.set({icons:newArray},function(){
+         const iconInput = document.getElementById('iconInput');
+         let opt = document.createElement('option');
+         opt.value = iconHref;
+         opt.text = newIconName
+         iconInput.appendChild(opt);
+       });
+    })
+  // }
+
 }
