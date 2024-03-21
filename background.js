@@ -20,6 +20,9 @@ chrome.tabs.onUpdated.addListener((tabId ,changeInfo,_tab) => {
    if (changeInfo.status === 'complete') {
     chrome.storage.local.get([`${tabId}`], function(response) {
       const data=response[tabId]
+        if(!data){
+          return
+        }
       if (data.name || data.icon) {
         // setTabProperties(data.name, data.icon);
         chrome.scripting.executeScript({
@@ -53,7 +56,7 @@ function saveNewIcon(newIconName){
   const links = head.getElementsByTagName('link');
   let iconHref;
   for (let i = 0; i < links.length; i++) {
-    if(links[i].getAttribute('rel').includes('icon') && links[i].getAttribute('sizes') === "16x16"){
+    if(links[i].getAttribute('rel').includes('icon') && links[i].getAttribute('sizes') === "32x32"){
         iconHref=links[i].href
         break;
     }
@@ -61,8 +64,8 @@ function saveNewIcon(newIconName){
   // if(iconHref){
      chrome.storage.local.get(['icons'], function(result) {
       const icons=result.icons
-      const newArray=[...icons, {text:newIconName, value:iconHref}]
-       chrome.storage.local.set({icons:newArray},function(){
+      const newObj={...icons, [newIconName]: iconHref}
+       chrome.storage.local.set({icons:newObj},function(){
          const iconInput = document.getElementById('iconInput');
          let opt = document.createElement('option');
          opt.value = iconHref;
