@@ -13,6 +13,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       args: [message.newIconName]
     });
   }
+  else if(message.type === 'deleteIcon'){
+    chrome.scripting.executeScript({
+      target: {tabId: message.tabId},
+      function: deleteIcon,
+      args: [message.iconToDelete]
+    });
+  }
 });
 
 chrome.tabs.onUpdated.addListener((tabId ,changeInfo,_tab) => {
@@ -61,18 +68,54 @@ function saveNewIcon(newIconName){
         break;
     }
   }
+  if(!iconHref){
+    //same search without the size filter
+    for (let i = 0; i < links.length; i++) {
+      if(links[i].getAttribute('rel').includes('icon')){
+          iconHref=links[i].href
+          break;
+      }
+    }
+  }
   // if(iconHref){
      chrome.storage.local.get(['icons'], function(result) {
       const icons=result.icons
       const newObj={...icons, [newIconName]: iconHref}
-       chrome.storage.local.set({icons:newObj},function(){
-         const iconInput = document.getElementById('iconInput');
-         let opt = document.createElement('option');
-         opt.value = iconHref;
-         opt.text = newIconName
-         iconInput.appendChild(opt);
-       });
+       chrome.storage.local.set({icons:newObj});
     })
   // }
 
 }
+  function deleteIcon(iconToDelete){
+    chrome.storage.local.get(['icons'], function(result) {
+      const icons=result.icons
+      const newObj={...icons}
+      //delete key that the value is iconToDelete
+        Object.entries(icons).forEach(([text, value])=> {
+            if(value===iconToDelete){
+            delete newObj[text]
+            }
+        })
+      chrome.storage.local.set({icons:newObj},
+  /*        function(){
+        //empty both selects
+        const iconInput = document.getElementById('iconInput');
+        iconInput.innerHTML = '';
+        const iconToDeleteInput = document.getElementById('iconToDeleteInput');
+        iconToDeleteInput.innerHTML = '';
+        let emptyOpt = document.createElement('option');
+        emptyOpt.value = '';
+        emptyOpt.text = ''
+        iconInput.appendChild(emptyOpt);
+        iconToDeleteInput.appendChild(emptyOpt.cloneNode(true));
+        Object.entries(newObj).forEach(([text, value])=> {
+          let opt = document.createElement('option');
+          opt.value = text;
+          opt.text = value
+          iconToDeleteInput.appendChild(opt);
+          iconToDeleteInput.appendChild(opt.cloneNode(true));
+        })
+      }*/
+      );
+    })
+  }
