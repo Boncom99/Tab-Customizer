@@ -2,7 +2,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const changeTabPropertiesBtn = document.getElementById('changeTabPropertiesBtn');
     const titleInput = document.getElementById('titleInput');
     const iconInput = document.getElementById('iconInput');
-    //save icon
+    const removeCurrentIconBtn = document.getElementById('removeCurrentIconBtn');
+    //save new icon
     const saveIconBtn= document.getElementById('saveIconBtn')
     const saveIconName= document.getElementById('NameOfIcon')
     const deleteIconBtn= document.getElementById('deleteIconBtn')
@@ -14,22 +15,31 @@ document.addEventListener('DOMContentLoaded', function() {
         'Google':
              'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAw1BMVEVHcEz////////9/f39/f79/f33+Pj////b3d74+fny8/P19vYAAAD////w8fH////////9/f3///8+fu7ZRCpBmEtNnVXaTDbbUz79/Pz0uCtIm1EqdO2FqPJplvDqpJ282MDifG87l0DW4fvXOBWqzrDvurbt8v55oPLkjIH00Mx0sHuRvpVpq3BrrHL2wEn51Y/4zHbw6eP4uBf86MP0sw6EpvJEhdRSie50prrFrCrsrqfqkSrssavxrDPP48yyx/Yvv4yqAAAAEnRSTlMAWZFT48ytmAumbmsCSV/Uv52LM4rJAAABN0lEQVQokY2SiXKCMBCGEUHBW5qQhGgRKopn7zq9ff+n6mZLNIAz7T/OZDdf8rO7xrL+p749Gg5Hdv8CsoOT7ApqBCU1TNYOKmrX2DpereJ1hf56LhhhjBHCFqazh0lCOOeMwW8e44Z3Nk0Y52TO+ZyQxDRGT7hH3kUQiDjRRSnWVMEH4+ShUnGzcH16/CKfl9pxYb2LomehNvLp9AWULyF2ATqw3kfRLZ6eXKEmNxA7f0Fti/BaCaC2HWNBUTjThRwBqnWsW3mTIS1aWYJtrlvBIWQ0DCne/T4Un8QhWL6K9hIo3e1pKg+TqdrxjcHv4G4o4YhMX43BW11MspRKKSlNM0y7+g9tYSpm281mO8NJBa3zU2hV52owy+oIE4lO+fl5/gkL36s93N7Adx3H9Qe9GioOlNMflcoty3IDwqwAAAAASUVORK5CYII'
     }
-    
-   chrome.storage.local.get(['icons'], function(result) {
-       const icons=result.icons
-    if(!icons || Object.keys(icons).length ===0){
-        chrome.storage.local.set({icons:options})
+    function setOptionsFromSelects(){
+       chrome.storage.local.get(['icons'], function(result) {
+           const icons=result.icons
+        if(!icons || Object.keys(icons).length ===0){
+            chrome.storage.local.set({icons:options})
+        }
+        //empty selection list
+        iconInput.innerHTML = '';
+        iconToDeleteInput.innerHTML = '';
+        let emptyOpt = document.createElement('option');
+        emptyOpt.value = '';
+        emptyOpt.text = '';
+        iconInput.appendChild(emptyOpt);
+        iconToDeleteInput.appendChild(emptyOpt.cloneNode(true));
+        Object.entries(icons).forEach(([text, value])=> {
+            let opt = document.createElement('option');
+            opt.value = value;
+            opt.text = text;
+            iconInput.appendChild(opt);
+            iconToDeleteInput.appendChild(opt.cloneNode(true));
+        });
+       })
     }
-    Object.entries(icons).forEach(([text, value])=> {
-        let opt = document.createElement('option');
-        opt.value = value;
-        opt.text = text;
-        iconInput.appendChild(opt);
-        iconToDeleteInput.appendChild(opt.cloneNode(true));
-    });
-   })
 
-
+    setOptionsFromSelects()
     //set Default values
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         const tabId = tabs[0].id;
@@ -49,22 +59,58 @@ document.addEventListener('DOMContentLoaded', function() {
             const newTitle = titleInput.value;
             // Set newIcon to an empty string to remove the icon
             const newIcon = iconInput.value;
-            chrome.runtime.sendMessage({type: "changeTabProperties", tabId: tabId, newTitle: newTitle, newIcon: newIcon});
             chrome.storage.local.set({[tabId]:{name: newTitle, icon: newIcon}});
+            chrome.runtime.sendMessage({type: "changeTabProperties", tabId: tabId, newTitle: newTitle, newIcon: newIcon},()=>{
+                window.close()
+            });
         });
     }
     function handleSaveIcon() {
         chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
             const tabId = tabs[0].id;
+            const favIconUrl = tabs[0].favIconUrl;
             const newIconName = saveIconName.value;
-            chrome.runtime.sendMessage({type: "saveNewIcon", tabId: tabId, newIconName});
+            chrome.runtime.sendMessage({type: "saveNewIcon", tabId: tabId, newIconName,  favIconUrl}, ()=> location.reload());
         });
     }
     function handleDeleteIcon() {
         chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
             const tabId = tabs[0].id;
             const iconToDelete = iconToDeleteInput.value;
-            chrome.runtime.sendMessage({type: "deleteIcon", tabId: tabId, iconToDelete});
+            chrome.runtime.sendMessage({type: "deleteIcon", tabId: tabId, iconToDelete},()=> location.reload());
+        })
+    }
+    function handleRemoveCurrentIcon() {
+        document.addEventListener('DOMContentLoaded', function() {
+            const icon = document.createElement('i');
+            icon.classList.add('fas', 'fa-coffee'); // Font Awesome icon
+            document.head.appendChild(icon);
+        });
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            const tabId = tabs[0].id;
+            const favIconUrl = tabs[0].favIconUrl;
+            chrome.runtime.sendMessage({type: "removeCurrentIcon", tabId, favIconUrl});
+        });
+    }
+    function createEmojiBase64(emoji){
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+        canvas.width = 32;
+        canvas.height = 32;
+        const fontSize = 24;
+        context.font = `${fontSize}px Arial`; // You can choose any font that supports emojis
+        context.fillText(emoji, 4,24); // Adjust position as needed
+        const base64Image = canvas.toDataURL("image/png");
+        return `${base64Image}`
+    }
+    function handleEmojiAsIcon(){
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            const tabId = tabs[0].id;
+            const newName= "heeeellll"
+            const favIconUrl = createEmojiBase64("❤️");
+            chrome.storage.local.set({[tabId]:{name: newName, icon: favIconUrl}});
+
+            chrome.runtime.sendMessage({type: "changeTabProperties", tabId: tabId, newTitle:newName, newIcon: favIconUrl}, ()=> location.reload());
         });
     }
 
@@ -85,4 +131,5 @@ document.addEventListener('DOMContentLoaded', function() {
     changeTabPropertiesBtn.addEventListener('click', handleSubmit);
     saveIconBtn.addEventListener('click', handleSaveIcon)
     deleteIconBtn.addEventListener('click', handleDeleteIcon)
+    removeCurrentIconBtn.addEventListener('click', handleEmojiAsIcon)
 });

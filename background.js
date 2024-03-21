@@ -6,11 +6,18 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       args: [message.newTitle, message.newIcon]
     });
   }
+  else if(message.type === 'removeCurrentIcon'){
+    chrome.scripting.executeScript({
+      target: {tabId: message.tabId},
+      function: removeCurrentIcon,
+      args: [message.favIconUrl]
+    });
+  }
   else if(message.type === 'saveNewIcon'){
     chrome.scripting.executeScript({
       target: {tabId: message.tabId},
       function: saveNewIcon,
-      args: [message.newIconName]
+      args: [message.newIconName, message.favIconUrl]
     });
   }
   else if(message.type === 'deleteIcon'){
@@ -20,18 +27,18 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       args: [message.iconToDelete]
     });
   }
+    sendResponse();
 });
 
 chrome.tabs.onUpdated.addListener((tabId ,changeInfo,_tab) => {
   const numberTabId=parseInt(tabId)
-   if (changeInfo.status === 'complete') {
+   // if (changeInfo.status === 'complete') {
     chrome.storage.local.get([`${tabId}`], function(response) {
       const data=response[tabId]
         if(!data){
           return
         }
       if (data.name || data.icon) {
-        // setTabProperties(data.name, data.icon);
         chrome.scripting.executeScript({
           target: {tabId: tabId},
           function: setTabProperties,
@@ -39,51 +46,51 @@ chrome.tabs.onUpdated.addListener((tabId ,changeInfo,_tab) => {
         });
       }
     });
-   }
+   // }
 });
 
 function setTabProperties(newTitle, newIcon) {
   if(newTitle){
   document.title = newTitle;
   }
-  if(!newIcon){
+  if(newIcon===undefined || newIcon===''){
     return
   }
   const head = document.getElementsByTagName('head')[0]; // Get the head element
   const links = head.getElementsByTagName('link');
   for (let i = 0; i < links.length; i++) {
     if(links[i].getAttribute('rel').includes('icon')){
+      if(newIcon===null){
+      removeCurrentIcon()
+      }
+      else{
           links[i].setAttribute('href', newIcon);
+      }
+    }
+  }
+}
+//TODO does not work
+//the icon persists
+function removeCurrentIcon(favIconUrl) {
+  const head = document.getElementsByTagName('head')[0]; // Get the head element
+  const links = head.getElementsByTagName('link');
+  for (let i = 0; i < links.length; i++) {
+    if(links[i].getAttribute('href') ==='favIconUrl'){
+      links[i].setAttribute('width', '1');
+        links[i].setAttribute('height', '1');
+        links[i].setAttribute('href','data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wdAAwAB/EPK1nAAAAAElFTkSuQmCC');
+        // links[i].remove()
+        
     }
   }
 }
 
-function saveNewIcon(newIconName){
-  const head = document.getElementsByTagName('head')[0]; // Get the head element
-  const links = head.getElementsByTagName('link');
-  let iconHref;
-  for (let i = 0; i < links.length; i++) {
-    if(links[i].getAttribute('rel').includes('icon') && links[i].getAttribute('sizes') === "32x32"){
-        iconHref=links[i].href
-        break;
-    }
-  }
-  if(!iconHref){
-    //same search without the size filter
-    for (let i = 0; i < links.length; i++) {
-      if(links[i].getAttribute('rel').includes('icon')){
-          iconHref=links[i].href
-          break;
-      }
-    }
-  }
-  // if(iconHref){
+function saveNewIcon(newIconName, favIconUrl){
      chrome.storage.local.get(['icons'], function(result) {
       const icons=result.icons
-      const newObj={...icons, [newIconName]: iconHref}
+      const newObj={...icons, [newIconName]: favIconUrl}
        chrome.storage.local.set({icons:newObj});
     })
-  // }
 
 }
   function deleteIcon(iconToDelete){
@@ -96,26 +103,6 @@ function saveNewIcon(newIconName){
             delete newObj[text]
             }
         })
-      chrome.storage.local.set({icons:newObj},
-  /*        function(){
-        //empty both selects
-        const iconInput = document.getElementById('iconInput');
-        iconInput.innerHTML = '';
-        const iconToDeleteInput = document.getElementById('iconToDeleteInput');
-        iconToDeleteInput.innerHTML = '';
-        let emptyOpt = document.createElement('option');
-        emptyOpt.value = '';
-        emptyOpt.text = ''
-        iconInput.appendChild(emptyOpt);
-        iconToDeleteInput.appendChild(emptyOpt.cloneNode(true));
-        Object.entries(newObj).forEach(([text, value])=> {
-          let opt = document.createElement('option');
-          opt.value = text;
-          opt.text = value
-          iconToDeleteInput.appendChild(opt);
-          iconToDeleteInput.appendChild(opt.cloneNode(true));
-        })
-      }*/
-      );
+      chrome.storage.local.set({icons:newObj});
     })
   }
