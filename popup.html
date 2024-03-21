@@ -5,26 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tab Title and Icon Changer</title>
     <script src="popup.js"></script>
+    <style>
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+       .tab{
+           display: flex;
+           flex-direction: row;
+           width: 100%;
+           min-width: 300px;
+       }
+    </style>
 </head>
 <body>
-<h1>Settings</h1>
-<h2>Change title and Icon</h2>
-<p>Enter new title:</p>
-<input type="text" id="titleInput">
-<p>Select icon:</p>
-<select id="iconInput">
-    <option value=""></option>
- </select>
-<button id="changeTabPropertiesBtn">Change</button>
-<button id="removeCurrentIconBtn">RemoveIcon</button>
-<h2>Save current tab's icon</h2>
-<p>Name of icon</p>
-<input type="text" id="NameOfIcon">
-<button id="saveIconBtn">Save</button>
-<h2>Delete Icons</h2>
-<select id="iconToDeleteInput">
-    <option value=""></option>
-</select>
-<button id="deleteIconBtn">Delete</button>
+<h1>Tabs Stylers</h1>
+<div class="tab">
+    <button class="tablinks" data-tab="changeTab">Change current tab</button>
+    <button class="tablinks" data-tab="saveTab">Manage Icons</button>
+</div>
+
+<div id="changeTab" class="tab-content">
+    <h2>Change title and Icon</h2>
+    <p>Enter new title:</p>
+    <input type="text" id="titleInput">
+    <p>Select icon:</p>
+    <select id="iconInput">
+        <option value=""></option>
+    </select>
+    <button id="changeTabPropertiesBtn">Change</button>
+    <button id="removeCurrentIconBtn">RemoveIcon</button>
+</div>
+
+<div id="saveTab" class="tab-content">
+    <h2>Save current tab's icon</h2>
+    <p>Name of icon</p>
+    <input type="text" id="NameOfIcon">
+    <button id="saveIconBtn">Save</button>
+    <h2>Delete Icons</h2>
+    <select id="iconToDeleteInput">
+        <option value=""></option>
+    </select>
+    <button id="deleteIconBtn">Delete</button>
+</div>
+
+
 </body>
 </html>

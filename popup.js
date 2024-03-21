@@ -1,4 +1,19 @@
+function openTab(evt, tabName) {
+    var i, tabcontent;
+    tabcontent = document.getElementsByClassName("tab-content");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.classList.add("active");
+}
 document.addEventListener('DOMContentLoaded', function() {
+    var tabButtons = document.getElementsByClassName("tablinks");
+    for (var i = 0; i < tabButtons.length; i++) {
+        tabButtons[i].addEventListener("click", function(event) {
+            openTab(event, this.getAttribute("data-tab"));
+        });
+    }
     const changeTabPropertiesBtn = document.getElementById('changeTabPropertiesBtn');
     const titleInput = document.getElementById('titleInput');
     const iconInput = document.getElementById('iconInput');
