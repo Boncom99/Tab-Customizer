@@ -63,6 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data[tabId]) {
                 titleInput.value = data[tabId].name;
                 iconInput.value = data[tabId].icon;
+                emojiInput.value = data[tabId].emojiText;
             }
         });
     })
@@ -74,14 +75,15 @@ document.addEventListener('DOMContentLoaded', function() {
             const tabId = tabs[0].id;
             const newTitle = titleInput.value;
             let newIcon = iconInput.value;
-            const newEmoji=emojiInput.value
-            if(newEmoji){
-                newIcon=createEmojiBase64(newEmoji.trim())
+            const newEmojiText=emojiInput.value
+            let newEmojiBase64;
+            if(newEmojiText){
+                newEmojiBase64=createEmojiBase64(newEmojiText.trim().substring(0,1))
             }
-            chrome.storage.local.set({[tabId]:{name: newTitle, icon: newIcon}});
-            chrome.runtime.sendMessage({type: "changeTabProperties", tabId: tabId, newTitle: newTitle, newIcon },()=>{
-                window.close()
-            });
+                chrome.storage.local.set({[tabId]:{name: newTitle , icon: newIcon , emoji:newEmojiBase64, emojiText:newEmojiText}});
+                chrome.runtime.sendMessage({type: "changeTabProperties", tabId: tabId, newTitle: newTitle, newIcon:newIcon, newEmoji: newEmojiBase64},()=>{
+                    window.close()
+                });
         });
     }
     function handleSaveIcon() {
@@ -123,16 +125,6 @@ document.addEventListener('DOMContentLoaded', function() {
         context.fillText(emoji, 16,18); // Adjust position as needed
         const base64Image = canvas.toDataURL("image/png");
         return `${base64Image}`
-    }
-    function handleEmojiAsIcon(){
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-            const tabId = tabs[0].id;
-            const newName= titleInput.value
-            const favIconUrl = createEmojiBase64("❤️");
-            chrome.storage.local.set({[tabId]:{name: newName, icon: favIconUrl}});
-
-            chrome.runtime.sendMessage({type: "changeTabProperties", tabId: tabId, newTitle:newName, newIcon: favIconUrl}, ()=> location.reload());
-        });
     }
 
     // Listen for keypress events on the input fields
