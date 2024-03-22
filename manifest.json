@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Tab Title Changer",
+  "name": "Tabify",
   "version": "1.0",
-  "description": "Change the title of the current tab",
+  "description": "Customize Your Browser Experience. Change the icon and title of any tab.",
   "host_permissions": [
     "https://*/*",
     "http://*/*"

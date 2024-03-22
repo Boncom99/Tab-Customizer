@@ -55,10 +55,10 @@ function setTabProperties(newTitle, newIcon, newEmoji) {
   }
   let newIconToInsert=newEmoji
   if(!newEmoji){
-  if(!newIcon){
-    return
-  }
-  newIconToInsert=newIcon
+    if(!newIcon){
+      return
+    }
+    newIconToInsert=newIcon
   }
   const head = document.getElementsByTagName('head')[0]; // Get the head element
   const links = head.getElementsByTagName('link');

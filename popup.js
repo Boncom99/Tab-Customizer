@@ -76,9 +76,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const newTitle = titleInput.value;
             let newIcon = iconInput.value;
             const newEmojiText=emojiInput.value
+            //get only first element of string
             let newEmojiBase64;
             if(newEmojiText){
-                newEmojiBase64=createEmojiBase64(newEmojiText.trim().substring(0,1))
+                newEmojiBase64=createEmojiBase64(newEmojiText.trim())
             }
                 chrome.storage.local.set({[tabId]:{name: newTitle , icon: newIcon , emoji:newEmojiBase64, emojiText:newEmojiText}});
                 chrome.runtime.sendMessage({type: "changeTabProperties", tabId: tabId, newTitle: newTitle, newIcon:newIcon, newEmoji: newEmojiBase64},()=>{
@@ -114,15 +115,21 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     function createEmojiBase64(emoji){
+        let oneCharacter=emoji.substring(0,2);
+        const emojiRegex = /\p{Emoji}/u;
+        if(oneCharacter.length>1 && !emoji.match(emojiRegex)){
+                oneCharacter=emoji.substring(0,1)
+        }
         const canvas = document.createElement("canvas");
         const context = canvas.getContext("2d");
         canvas.width = 32;
         canvas.height = 32;
         const fontSize = 30;
+
         context.font = `${fontSize}px Arial`; // You can choose any font that supports emojis
         context.textAlign = "center";
         context.textBaseline = 'middle';
-        context.fillText(emoji, 16,18); // Adjust position as needed
+        context.fillText(oneCharacter, 16,18); // Adjust position as needed
         const base64Image = canvas.toDataURL("image/png");
         return `${base64Image}`
     }
