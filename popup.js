@@ -17,7 +17,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const changeTabPropertiesBtn = document.getElementById('changeTabPropertiesBtn');
     const titleInput = document.getElementById('titleInput');
     const iconInput = document.getElementById('iconInput');
-    const removeCurrentIconBtn = document.getElementById('removeCurrentIconBtn');
+    const emojiInput= document.getElementById('emojiInput');
+    // const removeCurrentIconBtn = document.getElementById('removeCurrentIconBtn');
     //save new icon
     const saveIconBtn= document.getElementById('saveIconBtn')
     const saveIconName= document.getElementById('NameOfIcon')
@@ -72,10 +73,13 @@ document.addEventListener('DOMContentLoaded', function() {
         chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
             const tabId = tabs[0].id;
             const newTitle = titleInput.value;
-            // Set newIcon to an empty string to remove the icon
-            const newIcon = iconInput.value;
+            let newIcon = iconInput.value;
+            const newEmoji=emojiInput.value
+            if(newEmoji){
+                newIcon=createEmojiBase64(newEmoji.trim())
+            }
             chrome.storage.local.set({[tabId]:{name: newTitle, icon: newIcon}});
-            chrome.runtime.sendMessage({type: "changeTabProperties", tabId: tabId, newTitle: newTitle, newIcon: newIcon},()=>{
+            chrome.runtime.sendMessage({type: "changeTabProperties", tabId: tabId, newTitle: newTitle, newIcon },()=>{
                 window.close()
             });
         });
@@ -112,16 +116,18 @@ document.addEventListener('DOMContentLoaded', function() {
         const context = canvas.getContext("2d");
         canvas.width = 32;
         canvas.height = 32;
-        const fontSize = 24;
+        const fontSize = 30;
         context.font = `${fontSize}px Arial`; // You can choose any font that supports emojis
-        context.fillText(emoji, 4,24); // Adjust position as needed
+        context.textAlign = "center";
+        context.textBaseline = 'middle';
+        context.fillText(emoji, 16,18); // Adjust position as needed
         const base64Image = canvas.toDataURL("image/png");
         return `${base64Image}`
     }
     function handleEmojiAsIcon(){
         chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
             const tabId = tabs[0].id;
-            const newName= "heeeellll"
+            const newName= titleInput.value
             const favIconUrl = createEmojiBase64("❤️");
             chrome.storage.local.set({[tabId]:{name: newName, icon: favIconUrl}});
 
@@ -146,5 +152,5 @@ document.addEventListener('DOMContentLoaded', function() {
     changeTabPropertiesBtn.addEventListener('click', handleSubmit);
     saveIconBtn.addEventListener('click', handleSaveIcon)
     deleteIconBtn.addEventListener('click', handleDeleteIcon)
-    removeCurrentIconBtn.addEventListener('click', handleEmojiAsIcon)
+    // removeCurrentIconBtn.addEventListener('click', handleEmojiAsIcon)
 });
