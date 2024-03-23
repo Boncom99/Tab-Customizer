@@ -5,7 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tab Title and Icon Changer</title>
     <script src="popup.js"></script>
+    <script src="openEmoji.js"></script>
     <style>
+        em{
+            font-weight: lighter;
+        }
         .tab-content {
             display: none;
         }
@@ -18,28 +22,58 @@
            width: 100%;
            min-width: 300px;
        }
+       .tablinks{
+              width: 50%;
+              padding: 10px;
+              text-align: center;
+              background-color: #f1f1f1;
+              border: 1px solid #ccc;
+              cursor: pointer;
+       }
+       .tablinks.active{
+           background-color: #ccc;
+       }
+       .submitButtonDiv{
+              display: flex;
+                justify-content: center;
+           align-items: center;
+           margin-top: 20px;
+       }
+       .submitBtn{
+       /*style submit button*/
+        width: 100px;
+        height: 30px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+           
+       }
     </style>
 </head>
 <body>
 <h1>Tabs Stylers</h1>
 <div class="tab">
-    <button class="tablinks" data-tab="changeTab">Change current tab</button>
-    <button class="tablinks" data-tab="saveTab">Manage Icons</button>
+    <button class="tablinks active" name="changeTab">Change current tab</button>
+    <button class="tablinks" name="saveTab">Manage Icons</button>
 </div>
 
-<div id="changeTab" class="tab-content">
-    <h2>Change title and Icon</h2>
-    <p>Enter new title:</p>
+<div id="changeTab" class="tab-content active">
+    <h2>Customise your tab!</h2>
+    <label>Enter new title:</label>
     <input type="text" id="titleInput">
-    <p>Select icon:</p>
+    <link rel="icon" type="image/png" href="https://ssl.gstatic.com/docs/documents/images/kix-favicon-2023q4.ico"/>
+    <p>Write an emoji 🔥, a letter (<b>T</b>) or pick an icon :
+        </br>
+    <em id="OSOpenEmojiInstructions">(Press <b>Win</b> + <b>.</b> or <b>Cmd</b> + <b>Ctrl</b> + <b>Space</b> to open the emoji picker)</em>
+    </p>
+    <input type="text" id="emojiInput" size="5" maxlength="2" placeholder="emoji" >
     <select id="iconInput">
-        <option value=""></option>
     </select>
-    <p>Or pick an emoji</p>
-    <input type="text" id="emojiInput">
-    <button id="changeTabPropertiesBtn">Change</button>
-
-<!--    <button id="removeCurrentIconBtn">RemoveIcon</button>-->
+    <div class="submitButtonDiv">
+    <button id="changeTabPropertiesBtn" class="submitBtn">Change</button>
+    </div>
 </div>
 
 <div id="saveTab" class="tab-content">
