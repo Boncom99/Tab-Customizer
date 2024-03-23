@@ -1,4 +1,6 @@
 function openTab(evt, tabName) {
+    // save on session storage the tab that is open
+    chrome.storage.session.set({tabOpen: tabName});
     //set button to active also
     var i, tabcontent;
     tabBtn= document.getElementsByClassName("tablinks");
@@ -8,10 +10,17 @@ function openTab(evt, tabName) {
         tabBtn[i].classList.remove("active");
     }
     document.getElementById(tabName).style.display = "block";
-    evt.currentTarget.classList.add("active");
+    document.getElementsByName(tabName)[0].setAttribute("class", "tablinks active");
     getOperationSystemOfUser()
+    tab2IsVisible()
 }
 document.addEventListener('DOMContentLoaded', function() {
+    //get tab opened from session storage and activate it
+    chrome.storage.session.get(['tabOpen'], function(result) {
+        if(result.tabOpen){
+            openTab("", result.tabOpen);
+        }
+    });
     var tabButtons = document.getElementsByClassName("tablinks");
     for (var i = 0; i < tabButtons.length; i++) {
         tabButtons[i].addEventListener("click", function(event) {
@@ -20,14 +29,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     const changeTabPropertiesBtn = document.getElementById('changeTabPropertiesBtn');
     const titleInput = document.getElementById('titleInput');
-    const iconInput = document.getElementById('iconInput');
+    const iconSelector = document.getElementById('iconSelector');
     const emojiInput= document.getElementById('emojiInput');
-    // const removeCurrentIconBtn = document.getElementById('removeCurrentIconBtn');
     //save new icon
     const saveIconBtn= document.getElementById('saveIconBtn')
     const saveIconName= document.getElementById('NameOfIcon')
     const deleteIconBtn= document.getElementById('deleteIconBtn')
-    const iconToDeleteInput= document.getElementById('iconToDeleteInput');
     getOperationSystemOfUser()
 
     const options = {
@@ -44,21 +51,18 @@ document.addEventListener('DOMContentLoaded', function() {
             chrome.storage.local.set({icons:options})
         }
         //empty selection list
-        iconInput.innerHTML = '';
-        iconToDeleteInput.innerHTML = '';
+        iconSelector.innerHTML = '';
         let emptyOpt = document.createElement('option');
         emptyOpt.value = '';
         emptyOpt.text = '';
         // emptyOpt.defaultSelected= true;
         // emptyOpt.disabled=true;
-        iconInput.appendChild(emptyOpt);
-        iconToDeleteInput.appendChild(emptyOpt.cloneNode(true));
+        iconSelector.appendChild(emptyOpt);
         Object.entries(icons).forEach(([text, value])=> {
             let opt = document.createElement('option');
             opt.value = value;
             opt.text = text;
-            iconInput.appendChild(opt);
-            iconToDeleteInput.appendChild(opt.cloneNode(true));
+            iconSelector.appendChild(opt);
         });
        })
     }
@@ -70,19 +74,29 @@ document.addEventListener('DOMContentLoaded', function() {
         chrome.storage.local.get([`${tabId}`], function(data) {
             if (data[tabId]) {
                 titleInput.value = data[tabId].name;
-                iconInput.value = data[tabId].icon;
+                iconSelector.value = data[tabId].icon;
                 emojiInput.value = data[tabId].emojiText;
             }
         });
     })
-  
+
+    iconSelector.addEventListener("change", (event) => {
+        if(iconSelector.value){
+            emojiInput.value=""
+        }
+    });
+    emojiInput.addEventListener("change", (event) => {
+        if(emojiInput.value){
+            iconSelector.value=""
+        }
+    });
 
     // Function to handle form submission
     function handleSubmit() {
         chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
             const tabId = tabs[0].id;
             const newTitle = titleInput.value;
-            let newIcon = iconInput.value;
+            let newIcon = iconSelector.value;
             const newEmojiText=emojiInput.value
             //get only first element of string
             let newEmojiBase64="";
@@ -163,15 +177,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    iconInput.addEventListener('keypress', function(event) {
+    iconSelector.addEventListener('keypress', function(event) {
         if (event.key === 'Enter') {
             handleSubmit();
         }
     });
 
     // Listen for click events on the button
-    changeTabPropertiesBtn.addEventListener('click', handleSubmit);
-    saveIconBtn.addEventListener('click', handleSaveIcon)
-    deleteIconBtn.addEventListener('click', handleDeleteIcon)
+    changeTabPropertiesBtn?.addEventListener('click', handleSubmit);
+    saveIconBtn?.addEventListener('click', handleSaveIcon)
+    deleteIconBtn?.addEventListener('click', handleDeleteIcon)
     // removeCurrentIconBtn.addEventListener('click', handleEmojiAsIcon)
 });

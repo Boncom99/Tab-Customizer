@@ -1,0 +1,93 @@
+em{
+    font-weight: lighter;
+}
+.tab-content {
+    display: none;
+}
+.tab-content.active {
+    display: block;
+}
+.tab{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    min-width: 300px;
+}
+.tablinks{
+    width: 50%;
+    padding: 10px;
+    text-align: center;
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+.tablinks.active{
+    background-color: #ccc;
+}
+.submitButtonDiv{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+.submitBtn{
+    /*style submit button*/
+    width: 100px;
+    height: 30px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+/*                good styling of inputs*/
+input, select {
+    width: auto;
+    height: 40px;
+    padding: 4px 15px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+    color: #333;
+}
+input.emoji{
+    width:70px;
+    /*padding: 2px;*/
+    /*font-size: 20px;*/
+    text-align: center;
+    margin-right: 8px;
+
+}
+
+ul{
+    list-style-type: none;
+}
+li{
+    margin: 10px;
+}
+.li-icon{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    width: 70%;
+    height: 30px;
+    padding: 5px 15px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius:5px;
+    font-size: 16px;
+}
+.deleteButton{
+    background-color: transparent;
+    border: none;
+    font-size: 16px;
+}
+.iconImage{
+    width: 20px;
+    height: 20px;
+}

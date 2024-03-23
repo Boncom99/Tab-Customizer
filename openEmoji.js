@@ -5,7 +5,9 @@ function getOperationSystemOfUser() {
     if (navigator.appVersion.indexOf("Win") != -1) OSName = "Windows";
     if (navigator.appVersion.indexOf("Mac") != -1) OSName = "MacOS";
     const OSElement= document.getElementById('OSOpenEmojiInstructions');
-  
+    if(!OSElement){
+        return
+    }
     if(OSName==="Windows") {
         OSElement.innerHTML = "(Press <b>Win</b> + <b>.</b> to open the emoji picker)"
     }
