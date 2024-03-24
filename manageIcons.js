@@ -32,6 +32,7 @@ function displayListOfIcons() {
         return
     }
     ul.innerHTML=""
+    displayIconToSave(ul)
     chrome.storage.local.get(['icons'], function(result) {
         const icons=result.icons
         if(!icons || Object.keys(icons).length ===0){
@@ -45,7 +46,8 @@ function displayListOfIcons() {
                 ${name} <button class="deleteIconBtn" name="${name}">⌫</button>
             </div>`
             ul.appendChild(li);
-            li.addEventListener('click', function() {
+            const btn= li.querySelector('.deleteIconBtn')
+            btn.addEventListener('click', function() {
                     // Find the corresponding title of the clicked button
                     //get button's name
                     handleDeleteIcon(name);
@@ -53,6 +55,32 @@ function displayListOfIcons() {
             
         });
     })
+}
+function displayIconToSave(parent){
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        const favIconUrl = tabs[0].favIconUrl;
+        const li =  document.createElement('li');
+        li.innerHTML = `<div>
+            <label>add current Icon to the library</label>
+        <div class="li-icon">
+            <img src="${favIconUrl}" rel="icon" class="iconImage" />
+                <input class="inListInput" id="addNewIconInput" placeholder="Icon's name"> <button id="addNewIconBtn" class="submitBtn deleteIconBtn"> + </ibutton>
+        </div>
+            </div>`
+        parent.appendChild(li);
+        const btn= li.querySelector('#addNewIconBtn')
+        btn.addEventListener('click', ()=>handleSaveIcon());
+    });
+}
+
+function handleSaveIcon() {
+    const addNewIconInput= document.getElementById('addNewIconInput');
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        const tabId = tabs[0].id;
+        const favIconUrl = tabs[0].favIconUrl;
+        const newIconName = addNewIconInput.value;
+        chrome.runtime.sendMessage({type: "saveNewIcon", tabId: tabId, newIconName,  favIconUrl}, ()=> location.reload());
+    });
 }
 function tab2IsVisible(){
     

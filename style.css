@@ -11,7 +11,7 @@ em{
     display: flex;
     flex-direction: row;
     width: 100%;
-    min-width: 300px;
+    min-width: 400px;
 }
 .tablinks{
     width: 50%;
@@ -31,8 +31,7 @@ em{
     margin-top: 20px;
 }
 .submitBtn{
-    /*style submit button*/
-    width: 100px;
+    width: auto;
     height: 30px;
     background-color: #4CAF50;
     color: white;
@@ -40,7 +39,16 @@ em{
     border-radius: 4px;
     cursor: pointer;
 }
-/*                good styling of inputs*/
+.cancelBtn{
+    width: auto;
+    height: 30px;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 10px;
+    background-color: #f44336;
+}
 input, select {
     width: auto;
     height: 40px;
@@ -61,12 +69,27 @@ input.emoji{
     margin-right: 8px;
 
 }
+.inListInput{
+    width: auto;
+    height: auto;
+    padding: auto;
+    margin: 8px 0;
+    display: inline-block;
+    border: 0 solid #ccc;
+    border-radius: 0;
+    box-sizing: border-box;
+    font-size: auto;
+    color: #333;
+    
+}
 
 ul{
     list-style-type: none;
+    width: 100%;
 }
 li{
     margin: 10px;
+    width: 100%;
 }
 .li-icon{
     display: flex;

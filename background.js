@@ -1,30 +1,10 @@
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.type === "changeTabProperties") {
+
+  if (message.type === "refreshTab") {
     chrome.scripting.executeScript({
       target: {tabId: message.tabId},
-      function: setTabProperties,
-      args: [message.newTitle, message.newIcon, message.newEmoji||""]
-    });
-  }
-  else if(message.type === 'removeCurrentIcon'){
-    chrome.scripting.executeScript({
-      target: {tabId: message.tabId},
-      function: removeCurrentIcon,
-      args: [message.favIconUrl]
-    });
-  }
-  else if(message.type === 'saveNewIcon'){
-    chrome.scripting.executeScript({
-      target: {tabId: message.tabId},
-      function: saveNewIcon,
-      args: [message.newIconName, message.favIconUrl]
-    });
-  }
-  else if(message.type === 'deleteIcon'){
-    chrome.scripting.executeScript({
-      target: {tabId: message.tabId},
-      function: deleteIcon,
-      args: [message.iconToDelete]
+      function: refresh,
+      args: []
     });
   }
     sendResponse();
@@ -69,24 +49,3 @@ function setTabProperties(newTitle, newIcon, newEmoji) {
   }
 }
 
-function saveNewIcon(newIconName, favIconUrl){
-     chrome.storage.local.get(['icons'], function(result) {
-      const icons=result.icons
-      const newObj={...icons, [newIconName]: favIconUrl}
-       chrome.storage.local.set({icons:newObj});
-    })
-
-}
-  function deleteIcon(iconToDelete){
-    chrome.storage.local.get(['icons'], function(result) {
-      const icons=result.icons
-      const newObj={...icons}
-      //delete key that the value is iconToDelete
-        Object.entries(icons).forEach(([text, value])=> {
-            if(value===iconToDelete){
-            delete newObj[text]
-            }
-        })
-      chrome.storage.local.set({icons:newObj});
-    })
-  }

@@ -31,11 +31,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const titleInput = document.getElementById('titleInput');
     const iconSelector = document.getElementById('iconSelector');
     const emojiInput= document.getElementById('emojiInput');
-    //save new icon
-    const saveIconBtn= document.getElementById('saveIconBtn')
-    const saveIconName= document.getElementById('NameOfIcon')
-    const deleteIconBtn= document.getElementById('deleteIconBtn')
-    getOperationSystemOfUser()
+    const resetIconBtn= document.getElementById('resetIconBtn')
+    
 
     const options = {
         'Stack Overflow':   'https://cdn.sstatic.net/Sites/stackoverflow/Img/favicon.ico?v=ec617d715196',
@@ -109,14 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
         });
     }
-    function handleSaveIcon() {
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-            const tabId = tabs[0].id;
-            const favIconUrl = tabs[0].favIconUrl;
-            const newIconName = saveIconName.value;
-            chrome.runtime.sendMessage({type: "saveNewIcon", tabId: tabId, newIconName,  favIconUrl}, ()=> location.reload());
-        });
-    }
+  
     function handleDeleteIcon() {
         chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
             const tabId = tabs[0].id;
@@ -170,6 +160,19 @@ document.addEventListener('DOMContentLoaded', function() {
         return `${base64Image}`
     }
 
+    function handleResetIcon(){
+        //refresh witout rewriting the icon or the tile
+        //get current tab
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            const tabId = tabs[0].id;
+            chrome.storage.local.set({[tabId]:{name: "", icon: "" , emoji:"", emojiText:""}},()=>{
+               chrome.tabs.reload(tabId)
+            });
+        })
+       
+        
+    }
+
     // Listen for keypress events on the input fields
     titleInput.addEventListener('keypress', function(event) {
         if (event.key === 'Enter') {
@@ -185,7 +188,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Listen for click events on the button
     changeTabPropertiesBtn?.addEventListener('click', handleSubmit);
-    saveIconBtn?.addEventListener('click', handleSaveIcon)
-    deleteIconBtn?.addEventListener('click', handleDeleteIcon)
+    resetIconBtn?.addEventListener('click', handleResetIcon)
     // removeCurrentIconBtn.addEventListener('click', handleEmojiAsIcon)
 });
