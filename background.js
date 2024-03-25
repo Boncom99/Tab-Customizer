@@ -1,10 +1,10 @@
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
-  if (message.type === "refreshTab") {
+  if (message.type === "changeTabProperties") {
     chrome.scripting.executeScript({
       target: {tabId: message.tabId},
-      function: refresh,
-      args: []
+      function: setTabProperties,
+      args: [message.newTitle, message.newIcon, message.newEmoji||""]
     });
   }
     sendResponse();

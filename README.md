@@ -18,3 +18,13 @@ Tabify lets you personalize tab titles and icons with ease, including web icons,
 
 ### Chrome
 You can download the extension [here]().
+
+
+
+## TODO:
+maybe: save icon and name related to website.
+add emty icon and custom icons.
+color of tab?
+icon picker to show the icons.
+add emoji picker 
+add default icon + title

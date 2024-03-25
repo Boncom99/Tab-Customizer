@@ -68,7 +68,7 @@ function displayIconToSave(parent){
         </div>
             </div>`
         parent.appendChild(li);
-        const btn= li.querySelector('#addNewIconBtn')
+        const btn= document.getElementById('addNewIconBtn')
         btn.addEventListener('click', ()=>handleSaveIcon());
     });
 }
@@ -79,7 +79,13 @@ function handleSaveIcon() {
         const tabId = tabs[0].id;
         const favIconUrl = tabs[0].favIconUrl;
         const newIconName = addNewIconInput.value;
-        chrome.runtime.sendMessage({type: "saveNewIcon", tabId: tabId, newIconName,  favIconUrl}, ()=> location.reload());
+        chrome.storage.local.get(['icons'], function(result) {
+            const icons=result.icons
+            const newObj={...icons}
+            newObj[newIconName]=favIconUrl
+            chrome.storage.local.set({icons:newObj},()=>location.reload());
+        })
+        // chrome.runtime.sendMessage({type: "saveNewIcon", tabId: tabId, newIconName,  favIconUrl}, ()=> location.reload());
     });
 }
 function tab2IsVisible(){

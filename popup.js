@@ -34,18 +34,62 @@ document.addEventListener('DOMContentLoaded', function() {
     const resetIconBtn= document.getElementById('resetIconBtn')
     
 
-    const options = {
+    const defaultIcons= {
         'Stack Overflow':   'https://cdn.sstatic.net/Sites/stackoverflow/Img/favicon.ico?v=ec617d715196',
         'Google Docs': 'https://ssl.gstatic.com/docs/documents/images/kix-favicon-2023q4.ico',
         'spreadsheet':'chrome://favicon/https://docs.google.com/spreadsheets/d/1FRyLcPIdD_NxIruOyghMo-IWHwCk-wiCNWFJiJppB04/edit#gid=518963277',
         'Google':
              'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAw1BMVEVHcEz////////9/f39/f79/f33+Pj////b3d74+fny8/P19vYAAAD////w8fH////////9/f3///8+fu7ZRCpBmEtNnVXaTDbbUz79/Pz0uCtIm1EqdO2FqPJplvDqpJ282MDifG87l0DW4fvXOBWqzrDvurbt8v55oPLkjIH00Mx0sHuRvpVpq3BrrHL2wEn51Y/4zHbw6eP4uBf86MP0sw6EpvJEhdRSie50prrFrCrsrqfqkSrssavxrDPP48yyx/Yvv4yqAAAAEnRSTlMAWZFT48ytmAumbmsCSV/Uv52LM4rJAAABN0lEQVQokY2SiXKCMBCGEUHBW5qQhGgRKopn7zq9ff+n6mZLNIAz7T/OZDdf8rO7xrL+p749Gg5Hdv8CsoOT7ApqBCU1TNYOKmrX2DpereJ1hf56LhhhjBHCFqazh0lCOOeMwW8e44Z3Nk0Y52TO+ZyQxDRGT7hH3kUQiDjRRSnWVMEH4+ShUnGzcH16/CKfl9pxYb2LomehNvLp9AWULyF2ATqw3kfRLZ6eXKEmNxA7f0Fti/BaCaC2HWNBUTjThRwBqnWsW3mTIS1aWYJtrlvBIWQ0DCne/T4Un8QhWL6K9hIo3e1pKg+TqdrxjcHv4G4o4YhMX43BW11MspRKKSlNM0y7+g9tYSpm281mO8NJBa3zU2hV52owy+oIE4lO+fl5/gkL36s93N7Adx3H9Qe9GioOlNMflcoty3IDwqwAAAAASUVORK5CYII'
     }
+    const randomDefaultOptions=[
+        {
+            title:"Work",
+            emoji:["💼","🫠","😴"],
+        },
+        {
+            title:"Fun",
+            emoji:["❤️","🥳" ],
+        },
+        {
+            title:"Uni",
+            emoji:["📚"],
+        },
+        {
+            title:"Wiki",
+            emoji:["W"],
+        },
+        {
+            title:"PH",
+            emoji:["️👀"]
+        }
+
+    ]
+    // const defaultIcons = {
+    //     // 'none': '///empty',
+    //     'google': './icons/google.ico',
+    //     'spreadsheet': './icons/excel.ico',
+    //     'docs': './icons/google_docs.ico',
+    //     'translate': './icons/translate.ico',
+    //     'scholar':'./icons/scholar.ico',
+    //     'wikipedia':'./icons/wikipedia.ico',
+    //     'chatGPT': './icons/chatgpt.ico',
+    //     'Copilot': './icons/copilot.ico',
+    //     'youtube': './icons/youtube.ico',
+    //     'Quora': './icons/quora.ico',
+    //     //porn hub
+    //     // 'facebook': './icons/facebook.ico',
+    //     // 'gmail': './icons/gmail.ico',
+    //     // 'calendar': './icons/calendar.ico',
+    //     // 'twitter': './icons/twitter.ico',
+    //     // 'github': './icons/github.ico',
+    //     // 'facebook': './icons/facebook.ico',
+    //     'Stack Overflow':   './icons/stackoverflow.ico',
+    // }
     function setOptionsFromSelects(){
        chrome.storage.local.get(['icons'], function(result) {
            const icons=result.icons
         if(!icons || Object.keys(icons).length ===0){
-            chrome.storage.local.set({icons:options})
+            chrome.storage.local.set({icons:defaultIcons})
         }
         //empty selection list
         iconSelector.innerHTML = '';
@@ -65,14 +109,30 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     setOptionsFromSelects()
+    
+    function generateRandomTab(){
+        const randomOption = randomDefaultOptions[Math.floor(Math.random()*randomDefaultOptions.length)]
+        const randomEmoji=randomOption.emoji[Math.floor(Math.random()*randomOption.emoji.length)]
+        titleInput.value = randomOption.title;
+        iconSelector.value = randomOption.icon ||"";
+        emojiInput.value =  randomEmoji||"";
+        return {
+           title:randomOption.title,
+           emoji:randomEmoji ||"",
+           icon: randomOption.icon||""
+        }
+    }
     //set Default values
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         const tabId = tabs[0].id;
         chrome.storage.local.get([`${tabId}`], function(data) {
             if (data[tabId]) {
-                titleInput.value = data[tabId].name;
+                titleInput.value = data[tabId].name ;
                 iconSelector.value = data[tabId].icon;
                 emojiInput.value = data[tabId].emojiText;
+            }
+            else{
+                generateRandomTab()
             }
         });
     })
@@ -102,30 +162,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
                 chrome.storage.local.set({[tabId]:{name: newTitle , icon: newIcon , emoji:newEmojiBase64, emojiText:newEmojiText}});
                 chrome.runtime.sendMessage({type: "changeTabProperties", tabId: tabId, newTitle: newTitle, newIcon:newIcon, newEmoji: newEmojiBase64},()=>{
-                    window.close()
+                    // window.close()
                 });
         });
     }
   
-    function handleDeleteIcon() {
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-            const tabId = tabs[0].id;
-            const iconToDelete = iconToDeleteInput.value;
-            chrome.runtime.sendMessage({type: "deleteIcon", tabId: tabId, iconToDelete},()=> location.reload());
-        })
-    }
-    function handleRemoveCurrentIcon() {
-        document.addEventListener('DOMContentLoaded', function() {
-            const icon = document.createElement('i');
-            icon.classList.add('fas', 'fa-coffee'); // Font Awesome icon
-            document.head.appendChild(icon);
-        });
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-            const tabId = tabs[0].id;
-            const favIconUrl = tabs[0].favIconUrl;
-            chrome.runtime.sendMessage({type: "removeCurrentIcon", tabId, favIconUrl});
-        });
-    }
+
     function isDarkMode() {
         return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
     }
