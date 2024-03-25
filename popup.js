@@ -21,11 +21,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     const randomDefaultTitle=[
-      'fun','Docs', 'Games', 'ChatGPT', 'YouTube', 'work','LOL','LMFAO','XD','NOT SUS',"PH","420","TODO","TL;DR","404" ,"IDK", 'Later', 'Music', "Happy Place","Sweet","personal","Love","pill","Wiki", "🚀🚀🚀🚀","Paris",'Travel','wedding','family'
+      'fun','Docs', 'Games', 'ChatGPT','F*ck','sh*t',"daaaaaamn",'YouTube', 'work','LOL','LMFAO','XD','NOT SUS',"PH","420","TODO","TL;DR","404" ,"IDK", 'Later', 'Music', "Happy Place","Sweet","personal","Love","pill","Wiki","Paris",'Travel','wedding','family'
 
     ]
     const randomDefaultEmoji=[
-        "❤️","🔥","🎨","💡","📆" ,"💼", "😴", "👀", "🫠" ,"💀","💩", "🫦" ,"🌝","🌚"  ,"🍆"  ,"🍑","🍾","🌿","😮‍💨","🤤","🎱","💸","❌","✅","🔝","🚀"
+        "❤️","🔥","🎨","💡","📆","🍺","🍻" ,"💼", "😴", "👀", "🫠" ,"💀","💩", "🫦" ,"🌝","🌚"  ,"🍆"  ,"🍑","🍾","🌿","😮‍💨","🤤","🎱","💸","❌","✅","🔝","🚀"
     ]
 
   

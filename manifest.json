@@ -26,14 +26,14 @@
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
-      "16": "icon10.png",
-      "48": "icon10.png",
-      "128": "icon10.png"
+      "16": "icon13.png",
+      "48": "icon13.png",
+      "128": "icon13.png"
     }
   },
   "icons": {
-    "16": "icon10.png",
-    "48": "icon10.png",
-    "128": "icon10.png"
+    "16": "icon13.png",
+    "48": "icon13.png",
+    "128": "icon13.png"
   }
 }
