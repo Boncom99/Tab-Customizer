@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         const tabId = tabs[0].id;
         chrome.storage.local.get([`${tabId}`], function(data) {
-            if (data[tabId]?.title && data[tabId]?.emojiText) {
+            if (data[tabId]?.name && data[tabId]?.emojiText) {
                 tabEmulatorTitle.textContent= data[tabId].name ;
                 tabEmulatorEmoji.textContent= data[tabId].emojiText;
             }
