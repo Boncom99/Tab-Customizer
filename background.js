@@ -1,5 +1,4 @@
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-
   if (message.type === "changeTabProperties") {
     chrome.scripting.executeScript({
       target: {tabId: message.tabId},
@@ -11,7 +10,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 chrome.tabs.onUpdated.addListener((tabId ,changeInfo,_tab) => {
-  const numberTabId=parseInt(tabId)
    // if (changeInfo.status === 'complete') {
     chrome.storage.local.get([`${tabId}`], function(response) {
       const data=response[tabId]

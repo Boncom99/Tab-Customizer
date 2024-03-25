@@ -1,38 +1,64 @@
+* {
+    box-sizing: border-box;
+}
 .container{
-    display: block;
-    height: 350px;
-    max-height: 350px;
-    width: 400px;
-    overflow: scroll;
-    background-color: red;
+    display: flex;
+    height: 200px;
+    max-height: 200px;
+    width: 350px;
+    max-width: 400px;
+    flex-direction: column;
+    align-items: center;
+
 }
 .tab-emulator{
     border-width: 0;
-    border-radius: 15px 15px 0 0;
-    background-color: darkgrey;
+    border-radius: 25px 25px 0 0;
+    background-color: #888;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    height: 80px;
+    height: 70px;
     width: 300px;
+    padding:5px 10px
 }
 .tab-emulator .icon{
-    width: 60px;
-    height: 60px;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 32px;
+    font-weight: bold;
+    color:#eee;
 }
 .tab-emulator .title-input{
+    line-height: 40px;
+    display: inline-block;
+    vertical-align: middle;
     margin-left: 20px;
     width: 240px;
-    height: 70px;
-    font-size: 30px;
+    max-width: 240px;
+    height: 40px;
+    max-height: 40px;
+    font-size: 20px;
     font-weight: normal;
+    white-space: nowrap;
+    color:#eee;
+    background-color: transparent;
+    border-width: 0;
+    text-align: start;
+    align-items: center;
+    overflow: hidden;
+    /*outline: none;*/
+
 }
 .tab-emulator .cross{
     justify-self: flex-end;
-    width: 30px;
-    height: 30px;
-    font-size: 30px;
+    margin-left:  5px;
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+    color:#eee;
 }
 
 
@@ -78,14 +104,24 @@ em{
     cursor: pointer;
 }
 .cancelBtn{
-    width: auto;
-    height: 30px;
+    padding: 5px 10px;
+    color: red;
+    border: 1.5px solid red;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 10px;
+    background-color: transparent;
+    font-size: 16px;
+    
+}
+.randomTabBtn{
+    padding: 4px 8px;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    margin-left: 10px;
-    background-color: #f44336;
+    background-color: transparent;
+    font-size: 28px;
 }
 input, select {
     width: auto;
@@ -110,15 +146,15 @@ input.emoji{
 .inListInput{
     width: auto;
     height: auto;
-    padding: auto;
+    /*padding: auto;*/
     margin: 8px 0;
     display: inline-block;
     border: 0 solid #ccc;
     border-radius: 0;
     box-sizing: border-box;
-    font-size: auto;
+    /*font-size: auto;*/
     color: #333;
-    
+
 }
 
 ul{
@@ -153,4 +189,12 @@ li{
 .iconImage{
     width: 20px;
     height: 20px;
+}
+.openEmojiInstructionsText{
+    text-align: center;
+    width: 80%;
+}
+.errorMessage{
+    color:red;
+    text-align: center;
 }
