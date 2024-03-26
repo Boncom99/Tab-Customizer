@@ -43,19 +43,19 @@ function setTabProperties(newTitle, newIcon, newEmoji) {
   const links = head.getElementsByTagName('link');
   for (let i = 0; i < links.length; i++) {
     if (links[i].getAttribute('rel').includes('icon')) {
-      links[i].setAttribute('href', newIconToInsert);
+      links[i].setAttribute('href', newEmoji);
     }
   }
-  //create  a new link with the icon
-  // let link= document.getElementById('dynamic-favicon-by-tabify-extension-123')
-  // if(!link){
-  //   link = document.createElement('link');
-  //   link.id ='dynamic-favicon-by-tabify-extension-123';
-  //   link.rel = 'icon';
-  //   link.type = 'image/png';
-  // }
-  //   link.href=newEmoji;
-  //  head.appendChild(link);
+  // create  a new link with the icon
+  let link= document.getElementById('dynamic-favicon-by-tabify-extension-123')
+  if(!link){
+    link = document.createElement('link');
+    link.id ='dynamic-favicon-by-tabify-extension-123';
+    link.rel = 'icon';
+    link.type = 'image/png';
+  }
+    link.href=newEmoji;
+   head.appendChild(link);
 
 }
 
