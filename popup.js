@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
             OSElement.innerHTML = "(Press <b>Win</b> + <b>.</b> to open the emoji picker)"
         }
         else if(OSName==="MacOS"){
-            OSElement.innerHTML = "(Press <b>Cmd</b> + <b>Ctrl</b> + <b>Space</b> to open the emoji picker)"
+            OSElement.innerHTML = "(Press <b>Cmd</b> + <b>Ctrl</b> + <b>Space</b>  to open<br/> the emoji picker)"
         }
         else{
             OSElement.innerHTML = "Press <b>Win</b> + <b>.</b> or <b>Cmd</b> + <b>Ctrl</b> + <b>Space</b> to open the emoji picker"
