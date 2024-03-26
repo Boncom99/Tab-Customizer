@@ -9,36 +9,22 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<h1>Tabs Stylers</h1>
-<div class="tab">
-    <button class="tablinks active" name="changeTab">Change current tab</button>
-    <button class="tablinks" name="manageIcons">Manage Icons</button>
-</div>
-
-<div id="changeTab" class="tab-content active">
-    <h2>Customise your tab!</h2>
-    <label>Enter new title:</label>
-    <input type="text" id="titleInput">
-    <link rel="icon" type="image/png" href="https://ssl.gstatic.com/docs/documents/images/kix-favicon-2023q4.ico"/>
-    <p>Write an emoji 🔥, a letter (<b>T</b>) or pick an icon :
-        </br>
+<div class="container">
+    <h1>Customise your tab 🎨</h1>
+    <p class="openEmojiInstructionsText">
     <em id="OSOpenEmojiInstructions">(Press <b>Win</b> + <b>.</b> or <b>Cmd</b> + <b>Ctrl</b> + <b>Space</b> to open the emoji picker)</em>
     </p>
-    <input type="text" id="emojiInput" class="emoji" >
-    <select id="iconSelector">
-    </select>
+
+    <div class="tab-emulator">
+        <div class="icon" contenteditable="true" id="tab-emulator-emoji"></div>
+        <div class="title-input" contenteditable="true" id="tab-emulator-title" ></div>
+        <div class="cross" id="tab-emulator-cross">✕</div>
+    </div>
+    <p id="errorMessage" class="errorMessage"></p>
     <div class="submitButtonDiv">
-    <button id="changeTabPropertiesBtn" class="submitBtn">Change</button>
+    <button id="randomTabBtn" class="randomTabBtn">🔀</button>
         <button id="resetIconBtn" class="cancelBtn">Reset</button>
     </div>
 </div>
-
-<div id="manageIcons" class="tab-content">
-    <script src="manageIcons.js"></script>
-    <h2>Manage Icons</h2>
-    <ul id="listOfIcons"></ul>
-</div>
-
-
 </body>
 </html>

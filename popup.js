@@ -1,19 +1,4 @@
-function openTab(evt, tabName) {
-    // save on session storage the tab that is open
-    chrome.storage.session.set({tabOpen: tabName});
-    //set button to active also
-    var i, tabcontent;
-    tabBtn= document.getElementsByClassName("tablinks");
-    tabcontent = document.getElementsByClassName("tab-content");
-    for (i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
-        tabBtn[i].classList.remove("active");
-    }
-    document.getElementById(tabName).style.display = "block";
-    document.getElementsByName(tabName)[0].setAttribute("class", "tablinks active");
-    getOperationSystemOfUser()
-    tab2IsVisible()
-}
+
 document.addEventListener('DOMContentLoaded', function() {
     //get tab opened from session storage and activate it
     chrome.storage.session.get(['tabOpen'], function(result) {
@@ -28,104 +13,134 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     const changeTabPropertiesBtn = document.getElementById('changeTabPropertiesBtn');
-    const titleInput = document.getElementById('titleInput');
-    const iconSelector = document.getElementById('iconSelector');
-    const emojiInput= document.getElementById('emojiInput');
+    const tabEmulatorTitle= document.getElementById('tab-emulator-title');
+    const tabEmulatorEmoji= document.getElementById('tab-emulator-emoji');
+    const tabEmulatorCross= document.getElementById('tab-emulator-cross');
     const resetIconBtn= document.getElementById('resetIconBtn')
-    
+    const randomTabBtn= document.getElementById('randomTabBtn')
 
-    const options = {
-        'Stack Overflow':   'https://cdn.sstatic.net/Sites/stackoverflow/Img/favicon.ico?v=ec617d715196',
-        'Google Docs': 'https://ssl.gstatic.com/docs/documents/images/kix-favicon-2023q4.ico',
-        'spreadsheet':'chrome://favicon/https://docs.google.com/spreadsheets/d/1FRyLcPIdD_NxIruOyghMo-IWHwCk-wiCNWFJiJppB04/edit#gid=518963277',
-        'Google':
-             'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAw1BMVEVHcEz////////9/f39/f79/f33+Pj////b3d74+fny8/P19vYAAAD////w8fH////////9/f3///8+fu7ZRCpBmEtNnVXaTDbbUz79/Pz0uCtIm1EqdO2FqPJplvDqpJ282MDifG87l0DW4fvXOBWqzrDvurbt8v55oPLkjIH00Mx0sHuRvpVpq3BrrHL2wEn51Y/4zHbw6eP4uBf86MP0sw6EpvJEhdRSie50prrFrCrsrqfqkSrssavxrDPP48yyx/Yvv4yqAAAAEnRSTlMAWZFT48ytmAumbmsCSV/Uv52LM4rJAAABN0lEQVQokY2SiXKCMBCGEUHBW5qQhGgRKopn7zq9ff+n6mZLNIAz7T/OZDdf8rO7xrL+p749Gg5Hdv8CsoOT7ApqBCU1TNYOKmrX2DpereJ1hf56LhhhjBHCFqazh0lCOOeMwW8e44Z3Nk0Y52TO+ZyQxDRGT7hH3kUQiDjRRSnWVMEH4+ShUnGzcH16/CKfl9pxYb2LomehNvLp9AWULyF2ATqw3kfRLZ6eXKEmNxA7f0Fti/BaCaC2HWNBUTjThRwBqnWsW3mTIS1aWYJtrlvBIWQ0DCne/T4Un8QhWL6K9hIo3e1pKg+TqdrxjcHv4G4o4YhMX43BW11MspRKKSlNM0y7+g9tYSpm281mO8NJBa3zU2hV52owy+oIE4lO+fl5/gkL36s93N7Adx3H9Qe9GioOlNMflcoty3IDwqwAAAAASUVORK5CYII'
-    }
-    function setOptionsFromSelects(){
-       chrome.storage.local.get(['icons'], function(result) {
-           const icons=result.icons
-        if(!icons || Object.keys(icons).length ===0){
-            chrome.storage.local.set({icons:options})
+
+    const randomDefaultTitle=[
+      'fun','Docs', 'Games', 'ChatGPT','F*ck','sh*t',"daaaaaamn",'YouTube', 'work','LOL','LMFAO','XD','NOT SUS',"PH","420","TODO","TL;DR","404" ,"IDK", 'Later', 'Music', "Happy Place","Sweet","personal","Love","pill","Wiki","Paris",'Travel','wedding','family'
+
+    ]
+    const randomDefaultEmoji=[
+        "❤️","🔥","🎨","💡","📆","🍺","🍻" ,"💼", "😴", "👀", "🫠" ,"💀","💩", "🫦" ,"🌝","🌚","🍆","🍑","🍾","🌿","😮‍💨","🤤","🎱","💸","❌","✅","🔝","🚀"
+    ]
+
+  
+
+    function getOperationSystemOfUser() {
+        //get if it's a IOS or Windows
+        var OSName = "Unknown OS";
+        if (navigator.appVersion.indexOf("Win") !== -1) OSName = "Windows";
+        if (navigator.appVersion.indexOf("Mac") !== -1) OSName = "MacOS";
+        const OSElement= document.getElementById('OSOpenEmojiInstructions');
+        if(!OSElement) return
+        if(OSName==="Windows") {
+            OSElement.innerHTML = "(Press <b>Win</b> + <b>.</b> to open the emoji picker)"
         }
-        //empty selection list
-        iconSelector.innerHTML = '';
-        let emptyOpt = document.createElement('option');
-        emptyOpt.value = '';
-        emptyOpt.text = '';
-        // emptyOpt.defaultSelected= true;
-        // emptyOpt.disabled=true;
-        iconSelector.appendChild(emptyOpt);
-        Object.entries(icons).forEach(([text, value])=> {
-            let opt = document.createElement('option');
-            opt.value = value;
-            opt.text = text;
-            iconSelector.appendChild(opt);
-        });
-       })
-    }
+        else if(OSName==="MacOS"){
+            OSElement.innerHTML = "(Press <b>Cmd</b> + <b>Ctrl</b> + <b>Space</b> to open the emoji picker)"
+        }
+        else{
+            OSElement.innerHTML = "Press <b>Win</b> + <b>.</b> or <b>Cmd</b> + <b>Ctrl</b> + <b>Space</b> to open the emoji picker"
+        }
 
-    setOptionsFromSelects()
+
+    }
+    getOperationSystemOfUser()
+    
+    function generateRandomTab(){
+        const randomTitle = randomDefaultTitle[Math.floor(Math.random()*randomDefaultTitle.length)]
+        const randomEmoji=randomDefaultEmoji[Math.floor(Math.random()*randomDefaultEmoji.length)]
+        tabEmulatorTitle.textContent= randomTitle;
+        tabEmulatorEmoji.textContent=  randomEmoji;
+    }
     //set Default values
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         const tabId = tabs[0].id;
         chrome.storage.local.get([`${tabId}`], function(data) {
-            if (data[tabId]) {
-                titleInput.value = data[tabId].name;
-                iconSelector.value = data[tabId].icon;
-                emojiInput.value = data[tabId].emojiText;
+            if (data[tabId]?.name && data[tabId]?.emojiText) {
+                tabEmulatorTitle.textContent= data[tabId].name ;
+                tabEmulatorEmoji.textContent= data[tabId].emojiText;
+            }
+            else{
+                submitRandomTab()
             }
         });
     })
 
-    iconSelector.addEventListener("change", (event) => {
-        if(iconSelector.value){
-            emojiInput.value=""
+    const emojiRegex = /\p{Emoji}/u;
+    
+    tabEmulatorEmoji.addEventListener("input", (event) => {
+        console.log('input',event)
+        console.log('event.data',event.data)
+        // this.textContent=event.data
+        // return;
+        const text= event.data
+        if(!text || text.length<1) {
+            handleSubmit()
+            return
         }
-    });
-    emojiInput.addEventListener("change", (event) => {
-        if(emojiInput.value){
-            iconSelector.value=""
+        let oneCharacter=text.substring(text.length - 2).toUpperCase();
+        if(oneCharacter.length>1 && !oneCharacter.match(emojiRegex)){
+            oneCharacter=text.substring(text.length-1)
         }
+        event.target.textContent=oneCharacter
+        
+       handleSubmit()
     });
+    tabEmulatorTitle.addEventListener("input", (event) => {
+        handleSubmit()
+    });
+    tabEmulatorCross.addEventListener('click',(event)=>{
+             tabEmulatorEmoji.textContent=""
+            tabEmulatorTitle.textContent=""
+    })
+    function checkChangesAreCorrect(tabId, title,emojiBase64){
+        //check the current title and favicons are the same as the props
+        //get chrome tab by id
+        chrome.tabs.get(tabId, (tab)=>{
+            const realIcon= tab.favIconUrl;
+            const realTitle=document.title
+            const errorTag= document.getElementById('errorMessage')
+            const errorMessage ="I couldn't update the Tab 🥲 properly"
+            console.log('realTitle', realTitle)
+            console.log('realicon', realIcon)
+            console.log('title', title)
+            console.log('emoji', emojiBase64)
+            if(realTitle !== title ||realIcon !== emojiBase64 ){
+                errorTag.innerText=errorMessage
+            }else{
+                errorTag.innerText=""
+            }
+        });
 
+       
+
+    }
     // Function to handle form submission
     function handleSubmit() {
+        document.getElementById('errorMessage').innerText=""
         chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
             const tabId = tabs[0].id;
-            const newTitle = titleInput.value;
-            let newIcon = iconSelector.value;
-            const newEmojiText=emojiInput.value
+            const newTitle = tabEmulatorTitle.textContent;
+            // let newIcon = iconSelector.value;
+            const newEmojiText=tabEmulatorEmoji.textContent;
             //get only first element of string
             let newEmojiBase64="";
             if(newEmojiText){
                 newEmojiBase64=createEmojiBase64(newEmojiText.trim())
             }
-                chrome.storage.local.set({[tabId]:{name: newTitle , icon: newIcon , emoji:newEmojiBase64, emojiText:newEmojiText}});
-                chrome.runtime.sendMessage({type: "changeTabProperties", tabId: tabId, newTitle: newTitle, newIcon:newIcon, newEmoji: newEmojiBase64},()=>{
-                    window.close()
+                chrome.storage.local.set({[tabId]:{name: newTitle , icon: "", emoji:newEmojiBase64, emojiText:newEmojiText}});
+                chrome.runtime.sendMessage({type: "changeTabProperties", tabId: tabId, newTitle: newTitle, newIcon:"", newEmoji: newEmojiBase64},()=>{
+                    // checkChangesAreCorrect(tabId,newTitle,newEmojiBase64)
                 });
         });
     }
   
-    function handleDeleteIcon() {
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-            const tabId = tabs[0].id;
-            const iconToDelete = iconToDeleteInput.value;
-            chrome.runtime.sendMessage({type: "deleteIcon", tabId: tabId, iconToDelete},()=> location.reload());
-        })
-    }
-    function handleRemoveCurrentIcon() {
-        document.addEventListener('DOMContentLoaded', function() {
-            const icon = document.createElement('i');
-            icon.classList.add('fas', 'fa-coffee'); // Font Awesome icon
-            document.head.appendChild(icon);
-        });
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-            const tabId = tabs[0].id;
-            const favIconUrl = tabs[0].favIconUrl;
-            chrome.runtime.sendMessage({type: "removeCurrentIcon", tabId, favIconUrl});
-        });
-    }
+
     function isDarkMode() {
         return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
     }
@@ -172,22 +187,16 @@ document.addEventListener('DOMContentLoaded', function() {
        
         
     }
+    function submitRandomTab(){
+        generateRandomTab()
+        handleSubmit()
+    }
 
-    // Listen for keypress events on the input fields
-    titleInput.addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') {
-            handleSubmit();
-        }
-    });
 
-    iconSelector.addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') {
-            handleSubmit();
-        }
-    });
 
     // Listen for click events on the button
     changeTabPropertiesBtn?.addEventListener('click', handleSubmit);
     resetIconBtn?.addEventListener('click', handleResetIcon)
+    randomTabBtn?.addEventListener('click', submitRandomTab)
     // removeCurrentIconBtn.addEventListener('click', handleEmojiAsIcon)
 });
