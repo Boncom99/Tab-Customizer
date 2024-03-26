@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const tabEmulatorTitle= document.getElementById('tab-emulator-title');
     const tabEmulatorEmoji= document.getElementById('tab-emulator-emoji');
     const tabEmulatorCross= document.getElementById('tab-emulator-cross');
-    const resetIconBtn= document.getElementById('resetIconBtn')
     const randomTabBtn= document.getElementById('randomTabBtn')
 
 
@@ -94,10 +93,12 @@ document.addEventListener('DOMContentLoaded', function() {
     tabEmulatorTitle.addEventListener("input", (event) => {
         handleSubmit()
     });
-    tabEmulatorCross.addEventListener('click',(event)=>{
-             tabEmulatorEmoji.textContent=""
-            tabEmulatorTitle.textContent=""
-    })
+    tabEmulatorCross.addEventListener('click',(event)=> {
+        tabEmulatorEmoji.textContent=""
+        tabEmulatorTitle.textContent=""
+        handleReset()
+        }
+    )
     function checkChangesAreCorrect(tabId, title,emojiBase64){
         //check the current title and favicons are the same as the props
         //get chrome tab by id
@@ -175,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return `${base64Image}`
     }
 
-    function handleResetIcon(){
+    function handleReset(){
         //refresh witout rewriting the icon or the tile
         //get current tab
         chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
@@ -191,12 +192,9 @@ document.addEventListener('DOMContentLoaded', function() {
         generateRandomTab()
         handleSubmit()
     }
-
-
-
+    
     // Listen for click events on the button
     changeTabPropertiesBtn?.addEventListener('click', handleSubmit);
-    resetIconBtn?.addEventListener('click', handleResetIcon)
     randomTabBtn?.addEventListener('click', submitRandomTab)
     // removeCurrentIconBtn.addEventListener('click', handleEmojiAsIcon)
 });

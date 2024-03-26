@@ -27,6 +27,11 @@ chrome.tabs.onUpdated.addListener((tabId ,changeInfo,_tab) => {
    // }
 });
 
+//on tab close remove the tab from storage
+chrome.tabs.onRemoved.addListener((tabId ,removeInfo) => {
+  chrome.storage.local.remove([tabId.toString()]);
+});
+
 function setTabProperties(newTitle, newIcon, newEmoji) {
   if(newTitle){
   document.title = newTitle;
