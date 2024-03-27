@@ -11,6 +11,7 @@ Tabify lets you personalize tab titles and changing icons for emojis, and letter
 
 ## Features
 - ✅ Works on Chrome
+- ✅ Works on Edge
 - ✅ Persist after refreshing 🔄 or navigating to a new website 
 - ✅ allow to add emojis or letters as Icons ❤️🔥
 - ✅ can reset 🎚️
