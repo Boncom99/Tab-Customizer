@@ -19,9 +19,9 @@ Tabify lets you personalize tab titles and changing icons for emojis, and letter
 
 
 ### Chrome
-You can download the extension [here]().
+You can download the extension [here](https://chromewebstore.google.com/detail/tabify/dodhmgkanlmnjcniefgkhffdopmhglif).
 ### Edge
-You can download the extension [here]().
+You can download the extension [here](https://chromewebstore.google.com/detail/tabify/dodhmgkanlmnjcniefgkhffdopmhglif).
 
 
 ## TODO:
