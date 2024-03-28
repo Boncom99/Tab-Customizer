@@ -1,39 +1,35 @@
 {
-  "manifest_version": 3,
-  "name": "Tabify",
-  "version": "1.0",
-  "description": "Customize Your Browser Experience. Change the icon and title of any tab.",
-  "host_permissions": [
-    "https://*/*",
-    "http://*/*"
-  ],
-  "permissions": [
-    "tabs",
-    "scripting",
-    "storage",
-    "favicon"
-  ],
-  "web_accessible_resources": [
-    {
-      "resources": ["_favicon/*"],
-      "matches": ["<all_urls>"],
-      "extension_ids": ["*"]
+    "version": "1.0.0",
+    "manifest_version": 3,
+    "name": "Tabify",
+    "description": "Customize Your Browser Experience. Change the icon and title of any tab.",
+    "action": {
+        "default_popup": "./dist/js/index.html",
+        "default_title": "Tabify"
+    },
+    "host_permissions": [
+        "https://*/*",
+        "http://*/*"
+    ],
+    "permissions": [
+        "tabs",
+        "scripting",
+        "storage",
+        "favicon"
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": ["_favicon/*"],
+            "matches": ["<all_urls>"],
+            "extension_ids": ["*"]
+        }
+    ],
+    "background": {
+        "service_worker": "./src/background.js"
+    },
+    "icons": {
+        "16": "./public/icon.png",
+        "48": "./public/icon.png",
+        "128": "./public/icon.png"
     }
-  ],
-  "background": {
-    "service_worker": "background.js"
-  },
-  "action": {
-    "default_popup": "popup.html",
-    "default_icon": {
-      "16": "icon13.png",
-      "48": "icon13.png",
-      "128": "icon13.png"
-    }
-  },
-  "icons": {
-    "16": "icon13.png",
-    "48": "icon13.png",
-    "128": "icon13.png"
-  }
 }

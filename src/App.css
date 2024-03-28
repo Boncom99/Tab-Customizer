@@ -1,10 +1,11 @@
+
 * {
     box-sizing: border-box;
 }
 .container{
     display: flex;
-    height: 200px;
-    max-height: 200px;
+    height: auto;
+    /*max-height: 650px;*/
     width: 350px;
     max-width: 400px;
     flex-direction: column;
@@ -66,6 +67,13 @@
     font-weight: bold;
     color:#eee;
 }
+input{
+    background-color: transparent;
+    border-width: 0;
+    text-align: start;
+    align-items: center;
+    overflow: hidden;
+}
 .tab-emulator .title-input{
     line-height: 40px;
     display: inline-block;
@@ -79,16 +87,11 @@
     font-weight: normal;
     white-space: nowrap;
     color:#eee;
-    background-color: transparent;
-    border-width: 0;
-    text-align: start;
-    align-items: center;
-    overflow: hidden;
     /*outline: none;*/
 
 }
- .cross{
-     position: relative;
+.cross{
+    position: relative;
     justify-self: flex-end;
     margin-left:  5px;
     width: 20px;
@@ -96,9 +99,9 @@
     font-size: 20px;
     color:#eee;
 }
- .cross:hover{
-     
- }
+.cross:hover{
+
+}
 
 
 em{
@@ -123,24 +126,33 @@ em{
 /*tooltip*/
 
 
- .tooltiptext {
-     visibility: hidden;
-     width: 38px;
-     font-size: 12px;
-     background-color: #666;
-     color: #ddd;
-     text-align: center;
-     border-radius: 6px;
-     padding: 3px 5px;
+.tooltiptext {
+    visibility: hidden;
+    width: 38px;
+    font-size: 12px;
+    background-color: #666;
+    color: #ddd;
+    text-align: center;
+    border-radius: 6px;
+    padding: 3px 5px;
 
-     /* Position the tooltip */
-     position: absolute;
-     z-index: 1000;
-        top: -20px;
-        left: 50%;
-        margin-left: -19px;
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1000;
+    top: -20px;
+    left: 50%;
+    margin-left: -19px;
 }
 
 .cross:hover .tooltiptext {
     visibility: visible;
+}
+
+em-emoji-picker {
+    --background-rgb: 200, 170, 255;
+    width: auto;
+    /*min-width: 250px;*/
+    height: 400px;
+    resize: horizontal;
+    overflow: auto;
 }
