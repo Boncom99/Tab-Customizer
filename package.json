@@ -1,5 +1,5 @@
 {
-  "name": "react-chrome-ext",
+  "name": "tabify",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -31,5 +31,9 @@
     "ts-loader": "^9.4.2",
     "webpack": "^5.75.0",
     "webpack-cli": "^5.0.1"
-  }
+  },
+  "description": "Customize Your Browser Experience. Change the icon and title of any tab.",
+  "main": "src/index.tsx",
+  "author": "",
+  "license": "ISC"
 }
