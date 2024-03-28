@@ -25,13 +25,10 @@ export const EmojiPicker=({onSelectedEmoji, close, isVisible}:props)=> {
                 
             }}
         >
-            <Picker data={data} onEmojiSelect={onSelectedEmoji} searchPosition={'static'} //onClickOutside={close}
+            <Picker data={data} onEmojiSelect={onSelectedEmoji} searchPosition={'static'} onClickOutside={close}
                     locale={'es'} i18n={i18n} theme='light'
                     previewPosition={'none'}
-                    // emojiButtonSize={50}
-            // emojiSize={38}
-            // emojiButtonColors={['rgba(102, 51, 153, .2)']}
-            icons={ 'solid'}
+                    icons={ 'solid'}
             />
         </div>
     )

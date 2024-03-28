@@ -167,7 +167,8 @@ useEffect(()=>{
             setEmoji(em.native)
             setShowEmojiPicker(false)
         }
-         const handleToggleEmojiPicker =()=>{
+         const handleToggleEmojiPicker =(e:any)=>{
+                      e.stopPropagation()
         console.log('clicked');
 
         setShowEmojiPicker(true)
@@ -202,10 +203,8 @@ useEffect(()=>{
             </div>            {
             showEmojiPicker &&(
             <EmojiPicker onSelectedEmoji={handleChooseEmoji} close={() =>{
-                if(showEmojiPicker){
-                    console.log('closing from onClickOutside')
-                setShowEmojiPicker(v=>false)
-                }
+                console.log('close')
+                setShowEmojiPicker(false)
                 }
             }
             isVisible={showEmojiPicker}
