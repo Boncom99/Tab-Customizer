@@ -10,7 +10,7 @@ Transform your browsing with Tabify, the new Chrome extension for personalizing 
 ### TL: DR
 Tabify lets you personalize tab titles and changing icons for emojis, and letters.
 
-<img src='smallPromoTitle.png' width='440'>
+<img src='./public/promo.png' width='440'>
 
 ## Features
 - ✅ Works on Chrome
