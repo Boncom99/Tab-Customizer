@@ -35,7 +35,7 @@ useEffect(()=>{
             setEmoji("")
             return
         }
-        let oneCharacter=newText.substring(newText.length - 2).toUpperCase();
+        let oneCharacter=newText.substring(newText.length - 3).toUpperCase();
         if(oneCharacter.length>1 && !oneCharacter.match(emojiRegex)){
             oneCharacter=newText.substring(newText.length-1)
         }
