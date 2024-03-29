@@ -1,8 +1,11 @@
 # Tabify 🎨
-Customize Your Browser Experience. Change the icon and title of any tab.
+Change the icon and title of any tab 🔥
+
+<img src='./screenshots/Screenshot 2024-03-28 at 13.08.32 copy.jpg' width='440'/>
 
 ## Description 👀:
-Transform your browsing with Tabify, the ultimate Chrome extension for personalizing your tabs! With Tabify, you can effortlessly modify tab titles and icons to match your style or organizational needs. Express yourself uniquely by adding emojis and letters as icons. Whether you’re looking to streamline your workflow, add a touch of personality to your browser or simply looking for more privacy 😉, Tabify is the perfect tool 🔨 for you!
+Whether you’re looking to streamline your workflow, add a touch of personality to your browser or simply looking for more privacy 😉, Tabify is the perfect tool 🔨 for you!
+Transform your browsing with Tabify, the new Chrome extension for personalizing your tabs! With Tabify, you can effortlessly modify tab titles and icons to match your style or organizational needs. Express yourself uniquely by adding emojis and letters as icons!
 
 ### TL: DR
 Tabify lets you personalize tab titles and changing icons for emojis, and letters.
@@ -11,9 +14,10 @@ Tabify lets you personalize tab titles and changing icons for emojis, and letter
 
 ## Features
 - ✅ Works on Chrome
-- ✅ Works on Edge
+- 🔜 Works on Edge
 - ✅ Persist after refreshing 🔄 or navigating to a new website 
 - ✅ allow to add emojis or letters as Icons ❤️🔥
+- ✅ fast access to native emojis
 - ✅ can reset 🎚️
 - ✅ random emoji and title by default
 
@@ -21,8 +25,8 @@ Tabify lets you personalize tab titles and changing icons for emojis, and letter
 ### Chrome
 You can download the extension [here](https://chromewebstore.google.com/detail/tabify/dodhmgkanlmnjcniefgkhffdopmhglif).
 ### Edge
-You can download the extension [here](https://chromewebstore.google.com/detail/tabify/dodhmgkanlmnjcniefgkhffdopmhglif).
+soon
 
 
 ## TODO:
-add emoji picker 
+- open native emoji picker
