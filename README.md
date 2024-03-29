@@ -1,6 +1,8 @@
 # Tabify 🎨
 Change the icon and title of any tab 🔥
 
+download the extension [here](https://chromewebstore.google.com/detail/tabify/dodhmgkanlmnjcniefgkhffdopmhglif).
+
 <img src='./screenshots/Screenshot 2024-03-28 at 13.08.32 copy.jpg' width='440'/>
 
 ## Description 👀:
