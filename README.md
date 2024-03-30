@@ -1,4 +1,4 @@
-# Tabify 🎨
+# Tab Customizer 🎨
 Change the icon and title of any tab 🔥
 
 download the extension [here](https://chromewebstore.google.com/detail/tabify/dodhmgkanlmnjcniefgkhffdopmhglif).
@@ -6,11 +6,11 @@ download the extension [here](https://chromewebstore.google.com/detail/tabify/do
 <img src='./screenshots/Screenshot 2024-03-28 at 13.08.32 copy.jpg' width='440'/>
 
 ## Description 👀:
-Whether you’re looking to streamline your workflow, add a touch of personality to your browser or simply looking for more privacy 😉, Tabify is the perfect tool 🔨 for you!
-Transform your browsing with Tabify, the new Chrome extension for personalizing your tabs! With Tabify, you can effortlessly modify tab titles and icons to match your style or organizational needs. Express yourself uniquely by adding emojis and letters as icons!
+Whether you’re looking to streamline your workflow, add a touch of personality to your browser or simply looking for more privacy 😉, Tab Customizer is the perfect tool 🔨 for you!
+Transform your browsing experience with this new Chrome extension for personalizing your tabs! With Tab Customizer, you can effortlessly modify tab titles and icons to match your style or organizational needs. Express yourself uniquely by adding emojis and letters as icons!
 
 ### TL: DR
-Tabify lets you personalize tab titles and changing icons for emojis, and letters.
+It lets you personalize tab titles and changing icons for emojis, and letters.
 
 <img src='./public/promo.png' width='440'>
 
