@@ -25,10 +25,6 @@ export const App=()=> {
         }
     },[])
 useEffect(()=>{
-    navigator.geolocation.getCurrentPosition(position => {
-        const { latitude, longitude } = position.coords;
-        amplitude.track('location', { latitude, longitude });
-    });
 
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         const tabId = tabs[0].id;
@@ -58,7 +54,7 @@ useEffect(()=>{
     const [title, setTitle] = useState<string>("");
     const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(true);
   
-    const emojiRegex = /\p{Emoji}/u;
+    const emojiRegex = /^\p{Emoji}$/u;
     const handleWriteEmoji=(event:any)=>{
         const newText= event.target.value
         amplitude.track("EmojiWriteInput", {status: "typed", value: newText})
@@ -143,8 +139,9 @@ useEffect(()=>{
             canvas.width = 32;
             canvas.height = 32;
             const fontSize = 30;
-            let color= mode==='dark'? "#ddd": mode==="light"?"#222":"#888";
-       
+            // let color= mode==='dark'? "#ddd": mode==="light"?"#222":"#888";
+            let color= "#888";
+
             context.font = `bold ${fontSize}px Arial`; // You can choose any font that supports emojis
             context.textAlign = "center";
             context.textBaseline = 'middle';
