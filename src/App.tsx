@@ -1,36 +1,67 @@
 /*global chrome*/
 import "./App.css"
-import {useCallback, useEffect, useRef, useState} from "react";
+import { useEffect,  useState} from "react";
 import {EmojiPicker} from "./EmojiPicker";
+import amplitude from"./amplitude";
 
+export const App=()=> {
 
-
-function App() {
-
+    const [mode, setMode] = useState<'dark'|'light'>('light')
+    useEffect(()=>{
+        const darkMode = window.matchMedia('(prefers-color-scheme: dark)');
+        const changeMode = (e:any)=>{
+            if(e.matches()){
+                setMode('dark')
+                amplitude.track("Mode", {status: "dark"})
+            }
+            else {
+                amplitude.track("Mode", {status: "light"})
+                setMode('light')
+            }
+        }
+        darkMode.addEventListener('change', changeMode);
+        return ()=>{
+            darkMode.removeEventListener('change', changeMode);
+        }
+    },[])
 useEffect(()=>{
+    navigator.geolocation.getCurrentPosition(position => {
+        const { latitude, longitude } = position.coords;
+        amplitude.track('location', { latitude, longitude });
+    });
+
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         const tabId = tabs[0].id;
-        if(!tabId) return
+
+        if(!tabId){
+            amplitude.track("Error", {status: "no tabId found", tab:tabs[0]})
+        return
+        }
+        amplitude.track("Opened", {tab: tabs[0]})
+
         chrome.storage.local.get([`${tabId}`], function(data) {
             if (data[tabId]?.name && data[tabId]?.emojiText) {
                 setTitle(data[tabId].name);
                 setEmoji(data[tabId].emojiText);
+                amplitude.track("Opened", {title: data[tabId].name, emoji: data[tabId].emojiText, status: "existing Tab"})
             }
             else{
+                amplitude.track("Opened", {status: "new Tab"})
+                amplitude.track("RandomTab", {status: "default"})
                 submitRandomTab()
             }
         });
     })
-    getOperationSystemOfUser()
 },[])
+
     const [emoji, setEmoji] = useState<string>("");
     const [title, setTitle] = useState<string>("");
     const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(true);
   
     const emojiRegex = /\p{Emoji}/u;
-    const writeEmoji=(event:any)=>{
+    const handleWriteEmoji=(event:any)=>{
         const newText= event.target.value
-        console.log(newText.length)
+        amplitude.track("EmojiWriteInput", {status: "typed", value: newText})
         if(!newText || newText.length<1) {
             setEmoji("")
             return
@@ -41,9 +72,23 @@ useEffect(()=>{
         }
         setEmoji(oneCharacter.toUpperCase())
     }
+    const handleWriteTitle= (e:any) =>{
+        //fire amplitude event after 3 seconds of not typing with a timeout
+        //debounce
+
+
+
+
+        amplitude.track("TitleWriteInput", {status: "typed", value: e.target.value})
+        setTitle(e.target.value)
+    }
     
     useEffect(() => {
+        const timeoutId = setTimeout(() =>
+            amplitude.track("Submit", {status: "debounce", title: title, emoji: emoji})
+            , 1000);
         handleSubmit();
+        return () => clearTimeout(timeoutId);
     }, [emoji, title]);
 
 
@@ -55,28 +100,6 @@ useEffect(()=>{
         const randomDefaultEmoji=[
             "❤️","🔥","🎨","💡","📆","🍺","🍻" ,"💼", "😴", "👀", "🫠" ,"💀","💩", "🫦" ,"🌝","🌚","🍆","🍑","🍾","🌿","😮‍💨","🤤","🎱","💸","❌","✅","🔝","🚀"
         ]
-
-
-
-        function getOperationSystemOfUser() {
-            //get if it's a IOS or Windows
-            var OSName = "Unknown OS";
-            if (navigator.appVersion.indexOf("Win") !== -1) OSName = "Windows";
-            if (navigator.appVersion.indexOf("Mac") !== -1) OSName = "MacOS";
-            const OSElement= document.getElementById('OSOpenEmojiInstructions');
-            if(!OSElement) return
-            if(OSName==="Windows") {
-                OSElement.innerHTML = "(Press <b>Win</b> + <b>.</b> to open the emoji picker)"
-            }
-            else if(OSName==="MacOS"){
-                OSElement.innerHTML = "(Press <b>Cmd</b> + <b>Ctrl</b> + <b>Space</b>  to open<br/> the emoji picker)"
-            }
-            else{
-                OSElement.innerHTML = "Press <b>Win</b> + <b>.</b> or <b>Cmd</b> + <b>Ctrl</b> + <b>Space</b> to open the emoji picker"
-            }
-
-
-        }
 
         function generateRandomTab(){
             const randomTitle = randomDefaultTitle[Math.floor(Math.random()*randomDefaultTitle.length)]
@@ -98,7 +121,8 @@ useEffect(()=>{
                 let newEmojiBase64:string="";
                 if(emoji){
                     newEmojiBase64=createEmojiBase64(emoji.trim())??"";
-                }               
+                }
+                amplitude.track("Submit", {status: "send", title: title, emoji: emoji, tabUrl: tabs[0].url, tab: tabs[0]})
                 chrome.storage.local.set({[tabId]:{name: title , icon: "", emoji:newEmojiBase64, emojiText:emoji}});
                 chrome.runtime.sendMessage({type: "changeTabProperties", tabId: tabId, newTitle: title, newIcon:"", newEmoji: newEmojiBase64},()=>{
                     // checkChangesAreCorrect(tabId,newTitle,newEmojiBase64)
@@ -106,13 +130,6 @@ useEffect(()=>{
             });
         }
 
-
-        function isDarkMode() {
-            return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        }
-        function isLightMode() {
-            return window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
-        }
         
         function createEmojiBase64(emoji:string){
             let oneCharacter=emoji.substring(0,2);
@@ -126,13 +143,8 @@ useEffect(()=>{
             canvas.width = 32;
             canvas.height = 32;
             const fontSize = 30;
-            let color="#888"
-            /*  if(isDarkMode()){
-                  color ="#ddd"
-              }
-              else if(isLightMode()){
-                  color="#222"
-              }*/
+            let color= mode==='dark'? "#ddd": mode==="light"?"#222":"#888";
+       
             context.font = `bold ${fontSize}px Arial`; // You can choose any font that supports emojis
             context.textAlign = "center";
             context.textBaseline = 'middle';
@@ -144,8 +156,7 @@ useEffect(()=>{
         }
 
         function handleReset(){
-            //refresh witout rewriting the icon or the tile
-            //get current tab
+            amplitude.track("Reset", {status: "clicked"})
             setTitle("")
             setEmoji("")
             chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
@@ -160,19 +171,17 @@ useEffect(()=>{
         }
         function submitRandomTab(){
             generateRandomTab()
-            handleSubmit()
         }
         const handleChooseEmoji=(em:any)=>{
+            amplitude.track("EmojiPicker", {status: "selected", emoji: em.native})
             // const generated=String.fromCodePoint(parseInt(em.unified, 16));
             setEmoji(em.native)
             setShowEmojiPicker(false)
         }
          const handleToggleEmojiPicker =(e:any)=>{
-                      e.stopPropagation()
-        console.log('clicked');
-
-        setShowEmojiPicker(true)
-             console.log(showEmojiPicker)
+            amplitude.track("EmojiInput", {status: "clicked"})
+            e.stopPropagation()
+            setShowEmojiPicker(v=>!v)
         }
 
     return (
@@ -187,9 +196,9 @@ useEffect(()=>{
                 </div>
                 <div className="tab-emulator">
                     <input type='text' style={{position: 'relative'}} className="icon" contentEditable="true" size={1}
-                           value={emoji} onChange={writeEmoji} onClick={handleToggleEmojiPicker} />
+                           value={emoji} onChange={handleWriteEmoji} onClick={handleToggleEmojiPicker} />
                     <input type='text' className="title-input" contentEditable="true" value={title}
-                           onChange={(e) => setTitle(e.target.value)}/>
+                           onChange={handleWriteTitle}/>
                     <div className="cross" onClick={handleReset}>✕
                         <span className="tooltiptext">reset</span>
                     </div>
@@ -199,11 +208,15 @@ useEffect(()=>{
             </div>
             <div className="tab-emulator-footer"></div>
             <div className="submitButtonDiv">
-                <button id="randomTabBtn" className="randomTabBtn" onClick={submitRandomTab}>🔀</button>
+                <button id="randomTabBtn" className="randomTabBtn" onClick={()=>{
+                    amplitude.track("RandomTab", {status: "clicked"})
+                    submitRandomTab()
+                }
+                }>🔀</button>
             </div>            {
             showEmojiPicker &&(
             <EmojiPicker onSelectedEmoji={handleChooseEmoji} close={() =>{
-                console.log('close')
+                amplitude.track("EmojiPicker", {status: "closed"})
                 setShowEmojiPicker(false)
                 }
             }
@@ -215,4 +228,3 @@ useEffect(()=>{
     );
 }
 
-export default App;

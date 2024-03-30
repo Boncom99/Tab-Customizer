@@ -1,8 +1,18 @@
+:root {
+    /*color-scheme: light dark;*/
+    /*--background-dark: #333;*/
+    /*--background-light: #eee;*/
+    /*--text-color-dark: #ddd;*/
+    /*--text-color-light: #333;*/
+    /*background-color: #eee;*/
+}
 
 * {
     box-sizing: border-box;
 }
 .container{
+    /*background-color: light-dark(var(--background-light), var(--background-dark));*/
+    /*color:light-dark(var(--text-color-light), var(--text-color-dark));*/
     display: flex;
     height: auto;
     /*max-height: 650px;*/

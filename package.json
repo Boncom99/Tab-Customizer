@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@amplitude/analytics-browser": "^2.6.1",
     "@emoji-mart/data": "^1.1.2",
     "@emoji-mart/react": "^1.1.1",
     "@types/chrome": "^0.0.263",
-    "@types/node": "^16.18.11",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "copy-webpack-plugin": "^11.0.0",
@@ -24,6 +24,7 @@
     "watch": "webpack -w --config webpack.config.js"
   },
   "devDependencies": {
+    "@types/node": "^20.11.30",
     "ts-loader": "^9.4.2",
     "webpack": "^5.75.0",
     "webpack-cli": "^5.0.1"

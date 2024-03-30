@@ -15,7 +15,8 @@
         "tabs",
         "scripting",
         "storage",
-        "favicon"
+        "favicon",
+        "geolocation"
     ],
     "web_accessible_resources": [
         {
