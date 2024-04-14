@@ -16,7 +16,7 @@ It lets you personalize tab titles and changing icons for emojis, and letters.
 
 ## Features
 - ✅ Works on Chrome
-- 🔜 Works on Edge
+- ✅ Works on Edge
 - ✅ Persist after refreshing 🔄 or navigating to a new website 
 - ✅ allow to add emojis or letters as Icons ❤️🔥
 - ✅ fast access to native emojis
@@ -27,7 +27,8 @@ It lets you personalize tab titles and changing icons for emojis, and letters.
 ### Chrome
 You can download the extension [here](https://chromewebstore.google.com/detail/tabify/dodhmgkanlmnjcniefgkhffdopmhglif).
 ### Edge
-soon
+You can download the extension [here](https://microsoftedge.microsoft.com/addons/detail/tab-customizer/jkeefkgmgppijnolfnhcghhcdeobmacf).
+
 
 
 ## TODO:
