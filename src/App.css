@@ -101,6 +101,10 @@ input{
     /*outline: none;*/
 
 }
+.title-input::placeholder {
+    color:#dedede;
+}
+
 .cross{
     position: relative;
     justify-self: flex-end;

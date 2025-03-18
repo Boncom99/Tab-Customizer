@@ -43,8 +43,7 @@ useEffect(()=>{
             }
             else{
                 amplitude.track("Opened", {status: "new Tab"})
-                amplitude.track("RandomTab", {status: "default"})
-                submitRandomTab()
+                // submitRandomTab()
             }
         });
     })
@@ -184,17 +183,15 @@ useEffect(()=>{
     return (
         <div className="container">
             <h2>Customise your tab 🎨</h2>
-            {/*<p className="openEmojiInstructionsText">
-                <em id="OSOpenEmojiInstructions">(Press <b>Win</b> + <b>.</b> or <b>Cmd</b> + <b>Ctrl</b> + <b>Space</b><br/> to
-                    open the emoji picker)</em>
-            </p>*/}
             <div className="row-of-tab-emulators">
                 <div className="tab-emulator tab-emulator-aux left">
                 </div>
                 <div className="tab-emulator">
                     <input type='text' style={{position: 'relative'}} className="icon" contentEditable="true" size={1}
+                           placeholder={'🔥'}
                            value={emoji} onChange={handleWriteEmoji} onClick={handleToggleEmojiPicker} />
                     <input type='text' className="title-input" contentEditable="true" value={title}
+                            placeholder={'Write a title...'}
                            onChange={handleWriteTitle}/>
                     <div className="cross" onClick={handleReset}>✕
                         <span className="tooltiptext">reset</span>

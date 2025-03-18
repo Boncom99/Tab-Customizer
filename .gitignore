@@ -22,5 +22,5 @@ yarn-debug.log*
 yarn-error.log*
 
 dist
-/config.ts
+/config.js
 /dist.zip
